@@ -7,44 +7,56 @@
 
 #include <engine.h>
 
-SDL_Window* Engine::window;
-SDL_GLContext Engine::context;
 
-void Engine::Init()
+/* INCLUDES */
+#include <graphics.h>
+#include <SDL2/SDL.h>
+
+
+namespace TF
 {
-	// Setup
-	glewInit();
 
-	SDL_Init(SDL_INIT_VIDEO);
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+/* METHOD DEFINITIONS */
+Engine::Engine(Graphics* g)
+{
+	this->graphics = g;
 
-	Engine::window = SDL_CreateWindow(
-			"Window Title",
-			SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED,
-			640, 480,
-			SDL_WINDOW_OPENGL
-	);
-	Engine::context = SDL_GL_CreateContext(window);
-	SDL_GL_SetSwapInterval(1);
+	// TEMPORARY -------------------------------------------------------------------------------------
+	std::vector<float> vertices = {
+		-0.5f, -0.5f, 0.0f,
+		 0.2f, -0.5f, 0.0f,
+		 0.0f,  0.5f, 0.0f,
+		 0.1f,  0.1f, 0.0f,
+		 0.8f, -0.7f, 0.0f
+	};
+
+	std::vector<unsigned int> elements = {
+		0, 3, 2,
+		1, 3, 4
+	};
+	this->graphics->AddComponent(vertices, elements, "../shaders/test.vert", "../shaders/test.frag");
+	// END TEMPORARY ---------------------------------------------------------------------------------
 }
 
-void Engine::Render()
+void Engine::mainLoop()
 {
-	// Render
-	glClear(GL_COLOR_BUFFER_BIT);
-	SDL_GL_SwapWindow(Engine::window);
+	bool running = true;
+	while(running)
+	{
+		// Event polling
+		SDL_Event event;
+		while(SDL_PollEvent(&event))
+		{
+			if(event.type == SDL_QUIT) running = false;
+		}
+
+		this->graphics->Render();
+
+		// Frame delay
+		SDL_Delay(33);
+	}
 }
 
 
-void Engine::Cleanup()
-{
-	// Clean up
-	SDL_GL_DeleteContext(Engine::context);
-	SDL_DestroyWindow(Engine::window);
-	SDL_Quit();
 }

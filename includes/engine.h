@@ -8,19 +8,28 @@
 #ifndef INCLUDES_ENGINE_H_
 #define INCLUDES_ENGINE_H_
 
-#include <SDL2/SDL.h>
-#include <GL/glew.h>
 
+namespace TF
+{
+
+
+/* FORWARD DECLARATIONS */
+class Graphics;
+
+
+/* CLASS DEFINITIONS */
 class Engine
 {
 private:
-	static SDL_Window* window;
-	static SDL_GLContext context;
+	Graphics* graphics;
 public:
-	static void Init();
-	static void Render();
-	static void Cleanup();
+	Engine(Graphics* g);
+
+	void mainLoop();
 };
+
+
+}
 
 
 #endif /* INCLUDES_ENGINE_H_ */
