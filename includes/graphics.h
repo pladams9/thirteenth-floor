@@ -19,22 +19,24 @@ namespace TF {
 
 
 /* FORWARD DECLARATIONS */
-class GraphicsComponent;
-
+class Engine;
+class VertexListComp;
+class ShaderComp;
 
 class Graphics
 {
 private:
 	SDL_Window* window;
 	SDL_GLContext context;
-
-	std::vector<GraphicsComponent*> gfxComps;
+	Engine* engine;
 public:
 	Graphics();
 	~Graphics();
 
-	void AddComponent(std::vector<float> vertices, std::vector<unsigned int> elements, const char* vertexShader, const char* fragmentShader);
+	void SetEngine(Engine* eng) {this->engine = eng;};
+
 	void Render();
+	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp);
 };
 
 

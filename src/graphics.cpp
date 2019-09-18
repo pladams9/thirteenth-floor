@@ -14,7 +14,9 @@
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
 
-#include <graphics_component.h>
+#include <engine.h>
+#include <shaderComp.h>
+#include <vertexListComp.h>
 
 
 namespace TF
@@ -56,15 +58,6 @@ Graphics::~Graphics()
 	SDL_Quit();
 }
 
-void Graphics::AddComponent(std::vector<float> vertices, std::vector<unsigned int> elements, const char* vertexShader, const char* fragmentShader)
-{
-	GraphicsComponent* gc = new GraphicsComponent;
-	gc->UpdateVertices(vertices);
-	gc->UpdateElements(elements, 6);
-	gc->LoadShader(vertexShader, fragmentShader);
-	this->gfxComps.push_back(gc);
-}
-
 void Graphics::Render()
 {
 	// Clear
@@ -72,13 +65,22 @@ void Graphics::Render()
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Draw components
-	for(std::vector<GraphicsComponent*>::iterator it = this->gfxComps.begin(); it != this->gfxComps.end(); ++it)
+	std::vector<std::string> types = {"VertexListComp", "ShaderComp"};
+	for(std::vector<Component*> entity : this->engine->GetComponents(types))
 	{
-		(*it)->Draw();
+		this->DrawEntity(dynamic_cast<VertexListComp*>(entity[0]), dynamic_cast<ShaderComp*>(entity[1]));
 	}
 
 	// Swap
 	SDL_GL_SwapWindow(this->window);
+}
+
+void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp)
+{
+	glUseProgram(shaderComp->GetProgram());
+	glBindVertexArray(vertComp->GetVAO());
+	glDrawElements(GL_TRIANGLES, vertComp->GetElementCount(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 
