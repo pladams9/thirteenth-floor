@@ -11,6 +11,7 @@
 
 /* INCLUDES */
 #include <unordered_map>
+#include <map>
 #include <string>
 #include <vector>
 
@@ -19,7 +20,7 @@ namespace TF
 
 
 /* FORWARD DECLARATIONS */
-class Graphics;
+class System;
 class Component;
 
 
@@ -33,14 +34,14 @@ using ComponentMap = std::unordered_map<EntityID, Component*>;
 class Engine
 {
 private:
-	Graphics* graphics; // TODO: Replace with systems object?
+	std::multimap<int, System*> systems;
 	EntityID nextEntityID = 0;
 	std::unordered_map<std::string, ComponentMap> components;
 
 public:
-	Engine(Graphics* g);
-
 	void MainLoop();
+
+	void AddSystem(System* system, int priority=0);
 	void AddEntity(std::vector<Component*> comps);
 	void AddComponent(Component* comp, EntityID entityID);
 

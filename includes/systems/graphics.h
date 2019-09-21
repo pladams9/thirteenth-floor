@@ -10,32 +10,32 @@
 
 
 /* INCLUDES */
+#include <vector>
+
 #include <SDL2/SDL.h>
 
-#include <vector>
+#include <systems/system.h>
 
 
 namespace TF {
 
 
 /* FORWARD DECLARATIONS */
-class Engine;
 class VertexListComp;
 class ShaderComp;
 class PositionComp;
 class RotationComp;
 
-class Graphics
+class Graphics : public System
 {
 private:
 	SDL_Window* window;
 	SDL_GLContext context;
-	Engine* engine = nullptr;
 public:
-	Graphics();
+	Graphics(Engine* engine);
 	~Graphics();
 
-	void SetEngine(Engine* eng) {this->engine = eng;};
+	void Step();
 
 	void Render();
 	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, RotationComp* rotComp);

@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef FACTORY_H_
-#define FACTORY_H_
+#ifndef BUILDERS_H_
+#define BUILDERS_H_
 
 
 /* INCLUDES */
@@ -22,7 +22,7 @@ class Component;
 
 
 /* FACTORY */
-namespace Factory
+namespace Create
 {
 
 std::vector<Component*> Cube();
@@ -33,4 +33,4 @@ std::vector<Component*> Cube();
 }
 
 
-#endif /* FACTORY_H_ */
+#endif /* BUILDERS_H_ */

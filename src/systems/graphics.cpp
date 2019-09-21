@@ -25,7 +25,8 @@ namespace TF
 
 
 /* METHOD DEFINITIONS */
-Graphics::Graphics()
+Graphics::Graphics(Engine* engine)
+: System(engine)
 {
 	// Initialize SDL
 	SDL_Init(SDL_INIT_VIDEO);
@@ -58,6 +59,11 @@ Graphics::~Graphics()
 	SDL_GL_DeleteContext(this->context);
 	SDL_DestroyWindow(this->window);
 	SDL_Quit();
+}
+
+void Graphics::Step()
+{
+	this->Render();
 }
 
 void Graphics::Render()

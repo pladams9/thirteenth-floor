@@ -20,7 +20,7 @@ class Component
 {
 public:
 	virtual ~Component() = default;
-	virtual std::string GetType() const = 0;
+	virtual std::string GetType() const =0;
 };
 
 

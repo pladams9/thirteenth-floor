@@ -1,14 +1,19 @@
+#include <builders.h>
 #include <engine.h>
-#include <factory.h>
 #include <systems/graphics.h>
+#include <systems/logic.h>
 
 int main( int argc, char* args[] )
 {
 	// Create Engine
-	TF::Engine engine(new TF::Graphics());
+	TF::Engine engine;
+
+	// Add systems
+	engine.AddSystem(new TF::Graphics(&engine));
+	engine.AddSystem(new TF::LogicSystem(&engine));
 
 	// Add entity
-	engine.AddEntity(TF::Factory::Cube());
+	engine.AddEntity(TF::Create::Cube());
 
 	// Run main loop
 	engine.MainLoop();

@@ -5,28 +5,21 @@
  *      Author: pladams9
  */
 
-#include <components/component.h>
-#include <components/logicComp.h>
 #include <engine.h>
-#include <systems/graphics.h>
 
 
 /* INCLUDES */
 #include <SDL2/SDL.h>
 
-
+#include <systems/system.h>
+#include <components/component.h>
+#include <components/logicComp.h>
 
 namespace TF
 {
 
 
 /* METHOD DEFINITIONS */
-Engine::Engine(Graphics* g)
-{
-	this->graphics = g;
-	g->SetEngine(this);
-}
-
 void Engine::MainLoop()
 {
 	bool running = true;
@@ -39,17 +32,16 @@ void Engine::MainLoop()
 			if(event.type == SDL_QUIT) running = false;
 		}
 
-		// TEMPORARY
-		for(std::vector<Component*> entity : this->GetComponents({"LogicComp"}))
-		{
-			dynamic_cast<LogicComp*>(entity[0])->Step();
-		}
-
-		this->graphics->Render();
-
-		// Frame delay
-		SDL_Delay(33);
+		for(std::pair<int, System*> system : this->systems)
+			{
+			system.second->Step();
+			}
 	}
+}
+
+void Engine::AddSystem(System* system, int priority)
+{
+	this->systems.insert(std::pair<int, System*>(priority, system));
 }
 
 void Engine::AddEntity(std::vector<Component*> comps)
