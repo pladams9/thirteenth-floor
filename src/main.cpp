@@ -1,6 +1,6 @@
 #include <engine.h>
-#include <graphics.h>
 #include <factory.h>
+#include <systems/graphics.h>
 
 int main( int argc, char* args[] )
 {

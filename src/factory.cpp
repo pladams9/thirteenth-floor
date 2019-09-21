@@ -5,15 +5,15 @@
  *      Author: pladams9
  */
 
+#include <components/component.h>
+#include <components/rotater_logic.h>
+#include <components/shaderComp.h>
+#include <components/transformComps.h>
+#include <components/vertexListComp.h>
 #include <factory.h>
 
 
 /* INCLUDES */
-#include <component.h>
-#include <vertexListComp.h>
-#include <shaderComp.h>
-#include <transformComps.h>
-#include <rotater_logic.h>
 
 
 namespace TF

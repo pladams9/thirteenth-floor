@@ -5,14 +5,14 @@
  *      Author: pladams9
  */
 
-#ifndef SHADERCOMP_H_
-#define SHADERCOMP_H_
+#ifndef COMPONENTS_SHADERCOMP_H_
+#define COMPONENTS_SHADERCOMP_H_
 
 
 /* INCLUDES */
+#include <components/component.h>
 #include <string>
 
-#include <component.h>
 
 
 namespace TF
@@ -37,4 +37,4 @@ public:
 }
 
 
-#endif /* SHADERCOMP_H_ */
+#endif /* COMPONENTS_SHADERCOMP_H_ */

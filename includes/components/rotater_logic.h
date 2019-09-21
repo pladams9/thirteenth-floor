@@ -5,13 +5,13 @@
  *      Author: pladams9
  */
 
-#ifndef ROTATER_LOGIC_H_
-#define ROTATER_LOGIC_H_
+#ifndef COMPONENTS_ROTATER_LOGIC_H_
+#define COMPONENTS_ROTATER_LOGIC_H_
 
 
 /* INCLUDES */
-#include <logicComp.h>
-#include <transformComps.h>
+#include <components/logicComp.h>
+#include <components/transformComps.h>
 
 namespace TF
 {
@@ -34,4 +34,4 @@ public:
 
 }
 
-#endif /* ROTATER_LOGIC_H_ */
+#endif /* COMPONENTS_ROTATER_LOGIC_H_ */

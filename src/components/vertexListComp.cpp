@@ -5,10 +5,7 @@
  *      Author: pladams9
  */
 
-#include <vertexListComp.h>
-
-
-/* INCLUDES */
+#include <components/vertexListComp.h>
 #include <GL/glew.h>
 
 

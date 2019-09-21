@@ -5,10 +5,9 @@
  *      Author: pladams9
  */
 
-#include <graphics.h>
-
-
-/* INCLUDES */
+#include <components/shaderComp.h>
+#include <components/transformComps.h>
+#include <components/vertexListComp.h>
 #include <iostream>
 
 #include <SDL2/SDL.h>
@@ -18,9 +17,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include <engine.h>
-#include <shaderComp.h>
-#include <vertexListComp.h>
-#include <transformComps.h>
+#include <systems/graphics.h>
 
 
 namespace TF

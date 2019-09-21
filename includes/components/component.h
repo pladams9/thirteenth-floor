@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef COMPONENT_H_
-#define COMPONENT_H_
+#ifndef COMPONENTS_COMPONENT_H_
+#define COMPONENTS_COMPONENT_H_
 
 
 /* INCLUDES */
@@ -27,4 +27,4 @@ public:
 }
 
 
-#endif /* COMPONENT_H_ */
+#endif /* COMPONENTS_COMPONENT_H_ */

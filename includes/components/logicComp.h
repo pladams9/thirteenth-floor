@@ -5,14 +5,14 @@
  *      Author: pladams9
  */
 
-#ifndef LOGICCOMP_H_
-#define LOGICCOMP_H_
+#ifndef COMPONENTS_LOGICCOMP_H_
+#define COMPONENTS_LOGICCOMP_H_
 
 
 /* INCLUDES */
+#include <components/component.h>
 #include <string>
 
-#include <component.h>
 
 
 namespace TF
@@ -31,4 +31,4 @@ public:
 }
 
 
-#endif /* LOGICCOMP_H_ */
+#endif /* COMPONENTS_LOGICCOMP_H_ */

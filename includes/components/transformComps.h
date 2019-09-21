@@ -5,16 +5,16 @@
  *      Author: pladams9
  */
 
-#ifndef TRANSFORMCOMPS_H_
-#define TRANSFORMCOMPS_H_
+#ifndef COMPONENTS_TRANSFORMCOMPS_H_
+#define COMPONENTS_TRANSFORMCOMPS_H_
 
 
 /* INCLUDES */
+#include <components/component.h>
 #include <string>
 #include <array>
 #include <math.h>
 
-#include <component.h>
 
 
 namespace TF
@@ -82,4 +82,4 @@ public:
 }
 
 
-#endif /* TRANSFORMCOMPS_H_ */
+#endif /* COMPONENTS_TRANSFORMCOMPS_H_ */

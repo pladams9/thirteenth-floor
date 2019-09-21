@@ -5,15 +5,15 @@
  *      Author: pladams9
  */
 
+#include <components/component.h>
+#include <components/logicComp.h>
 #include <engine.h>
+#include <systems/graphics.h>
 
 
 /* INCLUDES */
 #include <SDL2/SDL.h>
 
-#include <graphics.h>
-#include <component.h>
-#include <logicComp.h>
 
 
 namespace TF

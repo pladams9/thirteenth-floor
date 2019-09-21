@@ -5,13 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef VERTEXLISTCOMP_H_
-#define VERTEXLISTCOMP_H_
+#ifndef COMPONENTS_VERTEXLISTCOMP_H_
+#define COMPONENTS_VERTEXLISTCOMP_H_
 
 
 /* INCLUDES */
-#include <component.h>
-
+#include <components/component.h>
 #include <vector>
 #include <string>
 
@@ -40,4 +39,4 @@ public:
 }
 
 
-#endif /* VERTEXLISTCOMP_H_ */
+#endif /* COMPONENTS_VERTEXLISTCOMP_H_ */
