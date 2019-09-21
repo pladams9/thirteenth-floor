@@ -22,13 +22,15 @@ namespace TF {
 class Engine;
 class VertexListComp;
 class ShaderComp;
+class PositionComp;
+class RotationComp;
 
 class Graphics
 {
 private:
 	SDL_Window* window;
 	SDL_GLContext context;
-	Engine* engine;
+	Engine* engine = nullptr;
 public:
 	Graphics();
 	~Graphics();
@@ -36,7 +38,7 @@ public:
 	void SetEngine(Engine* eng) {this->engine = eng;};
 
 	void Render();
-	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp);
+	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, RotationComp* rotComp);
 };
 
 

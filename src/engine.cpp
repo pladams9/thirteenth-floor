@@ -13,6 +13,7 @@
 
 #include <graphics.h>
 #include <component.h>
+#include <logicComp.h>
 
 
 namespace TF
@@ -36,6 +37,12 @@ void Engine::MainLoop()
 		while(SDL_PollEvent(&event))
 		{
 			if(event.type == SDL_QUIT) running = false;
+		}
+
+		// TEMPORARY
+		for(std::vector<Component*> entity : this->GetComponents({"LogicComp"}))
+		{
+			dynamic_cast<LogicComp*>(entity[0])->Step();
 		}
 
 		this->graphics->Render();
