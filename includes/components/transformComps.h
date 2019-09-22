@@ -68,14 +68,16 @@ public:
 class ScaleComp : public Component
 {
 private:
-	float scale;
+	std::array<float, 3> scale;
 
 public:
 	std::string GetType() const { return "ScaleComp"; }
-	ScaleComp(float scale=1.0) { this->scale = scale; }
+	ScaleComp(float scale=1.0) { this->SetScale(scale); }
+	ScaleComp(float x, float y, float z) { this->SetScale(x, y, z); }
 
-	void SetScale(float scale) { this->scale = scale; }
-	float GetScale() { return this->scale; }
+	void SetScale(float x, float y, float z) { this->scale[0] = x; this->scale[1] = y; this->scale[2] = z; }
+	void SetScale(float scale) { this->scale[0] = scale; this->scale[1] = scale; this->scale[2] = scale; }
+	std::array<float, 3> GetScale() { return this->scale; }
 };
 
 

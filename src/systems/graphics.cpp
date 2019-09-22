@@ -51,6 +51,7 @@ Graphics::Graphics(Engine* engine)
 	// Initialize GLEW
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
 Graphics::~Graphics()
@@ -73,14 +74,15 @@ void Graphics::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
-	std::vector<std::string> types = {"VertexListComp", "ShaderComp", "PositionComp", "RotationComp"};
+	std::vector<std::string> types = {"VertexListComp", "ShaderComp", "PositionComp", "ScaleComp", "RotationComp"};
 	for(std::vector<Component*> entity : this->engine->GetComponents(types))
 	{
 		this->DrawEntity(
 				dynamic_cast<VertexListComp*>(entity[0]),
 				dynamic_cast<ShaderComp*>(entity[1]),
 				dynamic_cast<PositionComp*>(entity[2]),
-				dynamic_cast<RotationComp*>(entity[3])
+				dynamic_cast<ScaleComp*>(entity[3]),
+				dynamic_cast<RotationComp*>(entity[4])
 		);
 	}
 
@@ -88,7 +90,7 @@ void Graphics::Render()
 	SDL_GL_SwapWindow(this->window);
 }
 
-void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, RotationComp* rotComp)
+void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, ScaleComp* scaleComp, RotationComp* rotComp)
 {
 	// Set VAO
 	glBindVertexArray(vertComp->GetVAO());
@@ -99,9 +101,11 @@ void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, Posi
 	// Set Matrices
 	glm::mat4 model = glm::mat4(1.0f);
 	std::array<float, 3> pos = posComp->GetPosition();
+	std::array<float, 3> scale = scaleComp->GetScale();
 	std::array<float, 3> r_axis = rotComp->GetRotationAxis();
 	model = glm::translate(model, glm::vec3(pos[0], pos[1], pos[2]));
 	model = glm::rotate(model, rotComp->GetRotation(), glm::vec3(r_axis[0], r_axis[1], r_axis[2]));
+	model = glm::scale(model, glm::vec3(scale[0], scale[1], scale[2]));
 	int modelLoc = glGetUniformLocation(shaderComp->GetProgram(), "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 

@@ -24,6 +24,7 @@ namespace TF {
 class VertexListComp;
 class ShaderComp;
 class PositionComp;
+class ScaleComp;
 class RotationComp;
 
 class Graphics : public System
@@ -38,7 +39,7 @@ public:
 	void Step();
 
 	void Render();
-	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, RotationComp* rotComp);
+	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, ScaleComp* scaleComp, RotationComp* rotComp);
 };
 
 

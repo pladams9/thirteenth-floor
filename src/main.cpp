@@ -13,7 +13,10 @@ int main( int argc, char* args[] )
 	engine.AddSystem(new TF::LogicSystem(&engine));
 
 	// Add entity
-	engine.AddEntity(TF::Create::Cube());
+	for(int i = 0; i < 20; ++i)
+	{
+		engine.AddEntity(TF::Create::Cube());
+	}
 
 	// Run main loop
 	engine.MainLoop();
