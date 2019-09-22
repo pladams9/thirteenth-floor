@@ -56,7 +56,7 @@ void Engine::AddEntity(std::vector<Component*> comps)
 
 void Engine::AddComponent(Component* comp, EntityID entityID)
 {
-	ComponentMap* cm = &(this->components[comp->GetType()]);
+	ComponentEntityMap* cm = &(this->components[comp->GetType()]);
 	if(cm->find(entityID) == cm->end())
 	{
 		(*cm)[entityID] = comp;
@@ -67,12 +67,12 @@ void Engine::AddComponent(Component* comp, EntityID entityID)
 	}
 }
 
-std::vector<std::vector<Component*>> Engine::GetComponents(std::vector<std::string> comp_types)
+std::vector<Entity> Engine::GetEntities(std::vector<ComponentType> required_comp_types, std::vector<ComponentType> optional_comp_types)
 {
 	// Get shortest component list
-	std::string type_one;
+	ComponentType type_one;
 	int min_size = -1;
-	for(std::string type : comp_types)
+	for(std::string type : required_comp_types)
 	{
 		if(((int)this->components[type].size() < min_size) || (min_size == -1))
 		{
@@ -82,22 +82,22 @@ std::vector<std::vector<Component*>> Engine::GetComponents(std::vector<std::stri
 	}
 
 	// Get list of entities in that component list
-	std::vector<EntityID> entities;
-	for(ComponentMap::iterator it = this->components[type_one].begin(); it != this->components[type_one].end(); ++it)
+	std::vector<EntityID> entityIDs;
+	for(ComponentEntityMap::iterator it = this->components[type_one].begin(); it != this->components[type_one].end(); ++it)
 	{
-		entities.push_back(it->first);
+		entityIDs.push_back(it->first);
 	}
 
 	// Remove any entities not found in the other lists
-	for(std::string type : comp_types)
+	for(ComponentType type : required_comp_types)
 	{
 		if(type == type_one) continue;
 
-		for(std::vector<EntityID>::iterator it = entities.begin(); it != entities.end();)
+		for(std::vector<EntityID>::iterator it = entityIDs.begin(); it != entityIDs.end();)
 		{
 			if(this->components[type].find(*it) == this->components[type].end())
 			{
-				entities.erase(it);
+				entityIDs.erase(it);
 			}
 			else
 			{
@@ -107,18 +107,25 @@ std::vector<std::vector<Component*>> Engine::GetComponents(std::vector<std::stri
 	}
 
 	// Build our return container
-	std::vector<std::vector<Component*>> comps;
-	for(EntityID e : entities)
+	std::vector<Entity> entities;
+	for(EntityID e : entityIDs)
 	{
-	std::vector<Component*> c;
-		for(std::string type : comp_types)
+	ComponentTypeMap ctm;
+		for(ComponentType type : required_comp_types)
 		{
-			c.push_back(this->components[type][e]);
+			ctm.insert(std::pair<ComponentType, Component*>(type, this->components[type][e]));
 		}
-		comps.push_back(c);
+		for(ComponentType type : optional_comp_types)
+		{
+			if(this->components[type].find(e) != this->components[type].end())
+			{
+				ctm.insert(std::pair<ComponentType, Component*>(type, this->components[type][e]));
+			}
+		}
+		entities.push_back(Entity(e, ctm));
 	}
 
-	return comps;
+	return entities;
 }
 
 

@@ -75,14 +75,14 @@ void Graphics::Render()
 
 	// Draw components
 	std::vector<std::string> types = {"VertexListComp", "ShaderComp", "PositionComp", "ScaleComp", "RotationComp"};
-	for(std::vector<Component*> entity : this->engine->GetComponents(types))
+	for(Entity entity : this->engine->GetEntities(types))
 	{
 		this->DrawEntity(
-				dynamic_cast<VertexListComp*>(entity[0]),
-				dynamic_cast<ShaderComp*>(entity[1]),
-				dynamic_cast<PositionComp*>(entity[2]),
-				dynamic_cast<ScaleComp*>(entity[3]),
-				dynamic_cast<RotationComp*>(entity[4])
+				dynamic_cast<VertexListComp*>(entity.second.at("VertexListComp")),
+				dynamic_cast<ShaderComp*>(entity.second.at("ShaderComp")),
+				dynamic_cast<PositionComp*>(entity.second.at("PositionComp")),
+				dynamic_cast<ScaleComp*>(entity.second.at("ScaleComp")),
+				dynamic_cast<RotationComp*>(entity.second.at("RotationComp"))
 		);
 	}
 

@@ -26,8 +26,10 @@ class Component;
 
 /* TYPEDEFS */
 using EntityID = unsigned int;
-
-using ComponentMap = std::unordered_map<EntityID, Component*>;
+using ComponentType = std::string;
+using ComponentEntityMap = std::unordered_map<EntityID, Component*>;
+using ComponentTypeMap = std::unordered_map<ComponentType, Component*>;
+using Entity = std::pair<EntityID, ComponentTypeMap>;
 
 
 /* CLASS DEFINITIONS */
@@ -36,7 +38,7 @@ class Engine
 private:
 	std::multimap<int, System*> systems;
 	EntityID nextEntityID = 0;
-	std::unordered_map<std::string, ComponentMap> components;
+	std::unordered_map<std::string, ComponentEntityMap> components;
 
 public:
 	void MainLoop();
@@ -45,7 +47,7 @@ public:
 	void AddEntity(std::vector<Component*> comps);
 	void AddComponent(Component* comp, EntityID entityID);
 
-	std::vector<std::vector<Component*>> GetComponents(std::vector<std::string> comp_types);
+	std::vector<Entity> GetEntities(std::vector<ComponentType> required_comp_types, std::vector<ComponentType> optional_comp_types={});
 };
 
 

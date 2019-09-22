@@ -36,9 +36,9 @@ void LogicSystem::Step()
 
 	while(time_elapsed > this->timeStep)
 	{
-		for(std::vector<Component*> entity : this->engine->GetComponents({"LogicComp"}))
+		for(Entity entity : this->engine->GetEntities({"LogicComp"}))
 		{
-			dynamic_cast<LogicComp*>(entity[0])->Step();
+			dynamic_cast<LogicComp*>(entity.second.at("LogicComp"))->Step();
 		}
 	time_elapsed -= this->timeStep;
 	}
