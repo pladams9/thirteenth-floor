@@ -26,6 +26,7 @@ namespace Create
 {
 
 std::vector<Component*> Cube();
+std::vector<Component*> Camera();
 
 }
 

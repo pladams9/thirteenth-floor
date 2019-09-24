@@ -20,6 +20,17 @@ namespace TF
 
 
 /* METHOD DEFINITIONS */
+Engine::Engine()
+{
+	// Initialize SDL
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
+}
+
+Engine::~Engine()
+{
+	SDL_Quit();
+}
+
 void Engine::MainLoop()
 {
 	bool running = true;
@@ -37,6 +48,11 @@ void Engine::MainLoop()
 			system.second->Step();
 			}
 	}
+}
+
+EventManager* Engine::GetEventManager()
+{
+	return &this->eventManager;
 }
 
 void Engine::AddSystem(System* system, int priority)

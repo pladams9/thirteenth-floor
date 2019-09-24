@@ -11,7 +11,7 @@
 
 /* INCLUDES */
 #include <engine.h>
-
+#include <events.h>
 
 namespace TF
 {
@@ -22,11 +22,10 @@ class System
 {
 protected:
 	Engine* engine;
+	EventQueue eventQueue;
+
 public:
-	System(Engine* engine)
-	{
-		this->engine = engine;
-	}
+	System(Engine* eng) : engine(eng), eventQueue(eng->GetEventManager()) {}
 	virtual ~System() =default;
 	virtual void Step() =0;
 };

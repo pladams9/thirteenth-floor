@@ -8,7 +8,9 @@
 #include <components/shaderComp.h>
 #include <components/transformComps.h>
 #include <components/vertexListComp.h>
+#include <components/cameraTarget.h>
 #include <iostream>
+#include <array>
 
 #include <SDL2/SDL.h>
 #include <GL/glew.h>
@@ -25,12 +27,9 @@ namespace TF
 
 
 /* METHOD DEFINITIONS */
-Graphics::Graphics(Engine* engine)
+Graphics::Graphics(Engine* engine, int win_width, int win_height, std::string win_title)
 : System(engine)
 {
-	// Initialize SDL
-	SDL_Init(SDL_INIT_VIDEO);
-
 	// Setup OpenGL
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
@@ -43,7 +42,7 @@ Graphics::Graphics(Engine* engine)
 			"Window Title",
 			SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED,
-			640, 480,
+			win_width, win_height,
 			SDL_WINDOW_OPENGL
 	);
 	this->context = SDL_GL_CreateContext(this->window);
@@ -52,6 +51,11 @@ Graphics::Graphics(Engine* engine)
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
+	// Setup View & Projection Matrices
+	this->view = glm::mat4(1.0f);
+
+	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.1f, 100.0f);
 }
 
 Graphics::~Graphics()
@@ -59,11 +63,11 @@ Graphics::~Graphics()
 	// Clean up
 	SDL_GL_DeleteContext(this->context);
 	SDL_DestroyWindow(this->window);
-	SDL_Quit();
 }
 
 void Graphics::Step()
 {
+	this->UpdateCamera();
 	this->Render();
 }
 
@@ -74,8 +78,7 @@ void Graphics::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
-	std::vector<std::string> types = {"VertexListComp", "ShaderComp", "PositionComp", "ScaleComp", "RotationComp"};
-	for(Entity entity : this->engine->GetEntities(types))
+	for(Entity entity : this->engine->GetEntities({"VertexListComp", "ShaderComp", "PositionComp", "ScaleComp", "RotationComp"}))
 	{
 		this->DrawEntity(
 				dynamic_cast<VertexListComp*>(entity.second.at("VertexListComp")),
@@ -86,8 +89,24 @@ void Graphics::Render()
 		);
 	}
 
-	// Swap
+	// Swap buffers
 	SDL_GL_SwapWindow(this->window);
+}
+
+void Graphics::UpdateCamera()
+{
+	std::vector<Entity> cameras = this->engine->GetEntities({"PositionComp", "CameraTargetPosComp"});
+	if(cameras.size() > 0)
+	{
+		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
+		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("PositionComp"))->GetPosition();
+		std::array<float, 3> cam_target_pos = dynamic_cast<CameraTargetPosComp*>(cam.second.at("CameraTargetPosComp"))->GetPosition();
+		this->view = glm::lookAt(
+				glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]),
+				glm::vec3(cam_target_pos[0], cam_target_pos[1], cam_target_pos[2]),
+				glm::vec3(0.0f, 1.0f, 0.0f)
+		);
+	}
 }
 
 void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, ScaleComp* scaleComp, RotationComp* rotComp)
@@ -109,15 +128,11 @@ void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, Posi
 	int modelLoc = glGetUniformLocation(shaderComp->GetProgram(), "model");
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 
-	glm::mat4 view = glm::mat4(1.0f);
-	view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f));
 	int viewLoc = glGetUniformLocation(shaderComp->GetProgram(), "view");
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(this->view));
 
-	glm::mat4 projection;
-	projection = glm::perspective(glm::radians(45.0f), 640.0f / 480.0f, 0.1f, 100.0f);
 	int projectionLoc = glGetUniformLocation(shaderComp->GetProgram(), "projection");
-	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(projection));
+	glUniformMatrix4fv(projectionLoc, 1, GL_FALSE, glm::value_ptr(this->projection));
 
 
 	// Draw Call

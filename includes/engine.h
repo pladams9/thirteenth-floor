@@ -15,6 +15,9 @@
 #include <string>
 #include <vector>
 
+#include <events.h>
+
+
 namespace TF
 {
 
@@ -32,17 +35,22 @@ using ComponentTypeMap = std::unordered_map<ComponentType, Component*>;
 using Entity = std::pair<EntityID, ComponentTypeMap>;
 
 
-/* CLASS DEFINITIONS */
+/* CLASS DECLARATIONS */
 class Engine
 {
 private:
+	EventManager eventManager;
 	std::multimap<int, System*> systems;
 	EntityID nextEntityID = 0;
 	std::unordered_map<std::string, ComponentEntityMap> components;
 
 public:
+	Engine();
+	~Engine();
+
 	void MainLoop();
 
+	EventManager* GetEventManager();
 	void AddSystem(System* system, int priority=0);
 	void AddEntity(std::vector<Component*> comps);
 	void AddComponent(Component* comp, EntityID entityID);

@@ -18,6 +18,7 @@
 #include <components/shaderComp.h>
 #include <components/transformComps.h>
 #include <components/vertexListComp.h>
+#include <components/cameraTarget.h>
 
 
 namespace TF
@@ -74,11 +75,20 @@ std::vector<Component*> Cube()
 	TF::RotationComp* rc = new TF::RotationComp();
 	comps.push_back(rc);
 	comps.push_back(new TF::RotaterLogic(rc));
-	comps.push_back(new TF::ScaleComp((r_float() + 1) / 5));
+	comps.push_back(new TF::ScaleComp((r_float() + 1.0f) / 5.0f));
 
 	return comps;
 }
 
+std::vector<Component*> Camera()
+{
+	std::vector<Component*> comps;
+
+	comps.push_back(new TF::PositionComp(0, 3, -2));
+	comps.push_back(new TF::CameraTargetPosComp(0, 0, 0));
+
+	return comps;
+}
 
 }
 }
