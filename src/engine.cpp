@@ -31,17 +31,22 @@ Engine::~Engine()
 	SDL_Quit();
 }
 
+void Engine::Start()
+{
+	this->running = true;
+	this->MainLoop();
+}
+
+void Engine::Stop()
+{
+	this->running = false;
+}
+
 void Engine::MainLoop()
 {
-	bool running = true;
-	while(running)
+	while(this->running)
 	{
-		// Event polling
-		SDL_Event event;
-		while(SDL_PollEvent(&event))
-		{
-			if(event.type == SDL_QUIT) running = false;
-		}
+
 
 		for(std::pair<int, System*> system : this->systems)
 			{

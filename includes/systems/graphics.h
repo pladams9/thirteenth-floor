@@ -28,6 +28,8 @@ class PositionComp;
 class ScaleComp;
 class RotationComp;
 
+
+/* CLASS DECLARATION */
 class Graphics : public System
 {
 private:

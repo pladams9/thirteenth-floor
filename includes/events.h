@@ -36,6 +36,8 @@ private:
 	EventType eventType;
 	std::unordered_map<std::string, std::string> eventData;
 public:
+	Event();
+	Event(EventType event_type, std::unordered_map<std::string, std::string> event_data);
 	EventType GetEventType();
 	std::string GetStringData(std::string key);
 };
@@ -51,6 +53,7 @@ public:
 	EventQueue(EventManager* event_manager);
 	~EventQueue();
 
+	void Listen(EventType event_type);
 	bool PollEvents(Event& event_var);
 };
 

@@ -43,11 +43,14 @@ private:
 	std::multimap<int, System*> systems;
 	EntityID nextEntityID = 0;
 	std::unordered_map<std::string, ComponentEntityMap> components;
+	bool running = false;
 
 public:
 	Engine();
 	~Engine();
 
+	void Start();
+	void Stop();
 	void MainLoop();
 
 	EventManager* GetEventManager();

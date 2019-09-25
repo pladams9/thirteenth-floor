@@ -15,6 +15,14 @@ namespace TF
 /* METHOD DEFINITIONS */
 
 // class Event
+Event::Event()
+: eventType("NULL_EVENT"), eventData({})
+{}
+
+Event::Event(EventType event_type, std::unordered_map<std::string, std::string> event_data)
+: eventType(event_type), eventData(event_data)
+{}
+
 EventType Event::GetEventType()
 {
 	return this->eventType;
@@ -35,6 +43,11 @@ EventQueue::EventQueue(EventManager* event_manager)
 EventQueue::~EventQueue()
 {
 	this->eventManager->RemoveQueue(this->queueID);
+}
+
+void EventQueue::Listen(EventType event_type)
+{
+	this->eventManager->AddListener(this->queueID, event_type);
 }
 
 bool EventQueue::PollEvents(Event& event_var)
