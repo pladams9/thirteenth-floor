@@ -11,17 +11,24 @@
 
 /* INCLUDES */
 #include <string>
+#include <unordered_map>
 
 namespace TF
 {
 
 
+/* CLASS DECLARATIONS */
 class Component
 {
 public:
 	virtual ~Component() = default;
 	virtual std::string GetType() const =0;
 };
+
+
+/* TYPEDEFS */
+using ComponentType = std::string;
+using ComponentTypeMap = std::unordered_map<ComponentType, Component*>;
 
 
 }

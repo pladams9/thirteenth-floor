@@ -19,8 +19,8 @@ Event::Event()
 : eventType("NULL_EVENT"), eventData({})
 {}
 
-Event::Event(EventType event_type, std::unordered_map<std::string, std::string> event_data)
-: eventType(event_type), eventData(event_data)
+Event::Event(EventType event_type, std::unordered_map<std::string, std::string> data, std::unordered_map<std::string, EntityID> entities)
+: eventType(event_type), eventData(data), eventEntities(entities)
 {}
 
 EventType Event::GetEventType()

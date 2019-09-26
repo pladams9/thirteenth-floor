@@ -20,6 +20,9 @@ namespace TF
 EventLoggerSystem::EventLoggerSystem(Engine* eng) : System(eng)
 {
 	this->eventQueue.Listen("KEY_DOWN");
+	this->eventQueue.Listen("KEY_UP");
+	this->eventQueue.Listen("MOUSE_DOWN");
+	this->eventQueue.Listen("MOUSE_UP");
 }
 
 void EventLoggerSystem::Step()
@@ -27,7 +30,12 @@ void EventLoggerSystem::Step()
 	Event e;
 	while(this->eventQueue.PollEvents(e))
 	{
-		if(e.GetEventType() == "KEY_DOWN") std::cout << "Keycode: " << e.GetStringData("keycode") << std::endl;
+		if(e.GetEventType() == "KEY_DOWN") std::cout << "KEY_DOWN, Keycode: " << e.GetStringData("keycode") << std::endl;
+		if(e.GetEventType() == "KEY_UP") std::cout << "KEY_UP, Keycode: " << e.GetStringData("keycode") << std::endl;
+		if(e.GetEventType() == "MOUSE_DOWN")
+			std::cout << "MOUSE_DOWN, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y") << std::endl;
+		if(e.GetEventType() == "MOUSE_UP")
+			std::cout << "MOUSE_UP, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y") << std::endl;
 	}
 }
 

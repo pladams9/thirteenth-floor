@@ -32,6 +32,7 @@ void SDLEventSystem::Step()
 		case SDL_QUIT :
 			this->engine->Stop();
 			break;
+
 		case SDL_KEYDOWN :
 			this->engine->GetEventManager()->TriggerEvent(Event(
 					"KEY_DOWN",
@@ -41,6 +42,35 @@ void SDLEventSystem::Step()
 			));
 
 			if(SDL_event.key.keysym.sym == SDLK_ESCAPE) this->engine->Stop();
+			break;
+
+		case SDL_KEYUP :
+			this->engine->GetEventManager()->TriggerEvent(Event(
+					"KEY_UP",
+					{
+							{"keycode", Util::to_string(SDL_event.key.keysym.sym)}
+					}
+			));
+			break;
+
+		case SDL_MOUSEBUTTONDOWN :
+			this->engine->GetEventManager()->TriggerEvent(Event(
+					"MOUSE_DOWN",
+					{
+							{"x", Util::to_string(SDL_event.button.x)},
+							{"y", Util::to_string(SDL_event.button.y)}
+					}
+			));
+			break;
+
+		case SDL_MOUSEBUTTONUP :
+			this->engine->GetEventManager()->TriggerEvent(Event(
+					"MOUSE_UP",
+					{
+							{"x", Util::to_string(SDL_event.button.x)},
+							{"y", Util::to_string(SDL_event.button.y)}
+					}
+			));
 			break;
 		}
 	}

@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include <entity.h>
+#include <components/component.h>
 #include <events.h>
 
 
@@ -24,15 +26,6 @@ namespace TF
 
 /* FORWARD DECLARATIONS */
 class System;
-class Component;
-
-
-/* TYPEDEFS */
-using EntityID = unsigned int;
-using ComponentType = std::string;
-using ComponentEntityMap = std::unordered_map<EntityID, Component*>;
-using ComponentTypeMap = std::unordered_map<ComponentType, Component*>;
-using Entity = std::pair<EntityID, ComponentTypeMap>;
 
 
 /* CLASS DECLARATIONS */
