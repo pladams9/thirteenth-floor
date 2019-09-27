@@ -34,6 +34,7 @@ void SDLEventSystem::Step()
 			break;
 
 		case SDL_KEYDOWN :
+			if(SDL_event.key.repeat > 0) break; // Disregard key repeats
 			this->engine->GetEventManager()->TriggerEvent(Event(
 					"KEY_DOWN",
 					{

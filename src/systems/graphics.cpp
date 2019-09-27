@@ -95,6 +95,7 @@ void Graphics::Render()
 
 void Graphics::UpdateCamera()
 {
+	/* Cameras with a target
 	std::vector<Entity> cameras = this->engine->GetEntities({"PositionComp", "CameraTargetPosComp"});
 	if(cameras.size() > 0)
 	{
@@ -104,6 +105,22 @@ void Graphics::UpdateCamera()
 		this->view = glm::lookAt(
 				glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]),
 				glm::vec3(cam_target_pos[0], cam_target_pos[1], cam_target_pos[2]),
+				glm::vec3(0.0f, 1.0f, 0.0f)
+		);
+	}*/
+
+	// Cameras with a direction
+	std::vector<Entity> cameras = this->engine->GetEntities({"PositionComp", "DirectionComp"});
+	if(cameras.size() > 0)
+	{
+		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
+		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("PositionComp"))->GetPosition();
+		std::array<float, 3> cam_dir = dynamic_cast<DirectionComp*>(cam.second.at("DirectionComp"))->GetDirection();
+		glm::vec3 cameraPos = glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]);
+		glm::vec3 cameraDir = glm::vec3(cam_dir[0], cam_dir[1], cam_dir[2]);
+		this->view = glm::lookAt(
+				cameraPos,
+				cameraPos + cameraDir,
 				glm::vec3(0.0f, 1.0f, 0.0f)
 		);
 	}

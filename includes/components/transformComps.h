@@ -36,6 +36,20 @@ public:
 };
 
 
+class DirectionComp : public Component
+{
+private:
+	std::array<float, 3> direction;
+
+public:
+	std::string GetType() const { return "DirectionComp"; }
+	DirectionComp(float x=0.0, float y=0.0, float z=0.0) { this->SetDirection(x, y, z); }
+
+	void SetDirection(float x, float y, float z) { this->direction[0] = x; this->direction[1] = y; this->direction[2] = z; }
+	std::array<float, 3> GetDirection() { return this->direction; }
+};
+
+
 class RotationComp : public Component
 {
 private:

@@ -19,6 +19,7 @@
 #include <components/transformComps.h>
 #include <components/vertexListComp.h>
 #include <components/cameraTarget.h>
+#include <components/Control.h>
 
 
 namespace TF
@@ -84,8 +85,9 @@ std::vector<Component*> Camera()
 {
 	std::vector<Component*> comps;
 
-	comps.push_back(new TF::PositionComp(0, 3, -2));
-	comps.push_back(new TF::CameraTargetPosComp(0, 0, 0));
+	comps.push_back(new TF::PositionComp(0, 0, 3));
+	comps.push_back(new TF::DirectionComp(0, 0, -1));
+	comps.push_back(new TF::ControlComp());
 
 	return comps;
 }
