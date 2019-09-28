@@ -5,20 +5,20 @@
  *      Author: pladams9
  */
 
-#include <systems/KeyboardController.h>
-
-/* INCLUDES */
+#include <components/Controller.h>
 #include <iostream>
-#include <components/Control.h>
 #include <Events.h>
+#include <systems/KeyboardInput.h>
 
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* STATIC MEMBER INITIALIZATION */
-std::unordered_map<std::string, EventType> KeyboardControllerSystem::eventMap = {
+std::unordered_map<std::string, EventType> KeyboardInput::eventMap = {
 		{"1073741904", "TURN_LEFT"},	// Left
 		{"1073741903", "TURN_RIGHT"},	// Right
 		{"1073741905", "LOOK_UP"},		// Down
@@ -30,15 +30,15 @@ std::unordered_map<std::string, EventType> KeyboardControllerSystem::eventMap = 
 };
 
 /* METHOD DEFINITIONS */
-KeyboardControllerSystem::KeyboardControllerSystem(Engine* eng) : System(eng)
+KeyboardInput::KeyboardInput(Engine* eng) : System(eng)
 {
 	this->eventQueue.Listen("KEY_DOWN");
 	this->eventQueue.Listen("KEY_UP");
 }
 
-void KeyboardControllerSystem::Step()
+void KeyboardInput::Step()
 {
-	std::vector<Entity> entities = this->engine->GetEntities({"ControlComp"});
+	std::vector<Entity> entities = this->engine->GetEntities({"Controller"});
 
 	Event e;
 	while(this->eventQueue.PollEvents(e))
@@ -55,11 +55,12 @@ void KeyboardControllerSystem::Step()
 		for(Entity entity : entities)
 		{
 			{
-				dynamic_cast<ControlComp*>(entity.second.at("ControlComp"))->SetFlag(flag, val);
+				dynamic_cast<Comp::Controller*>(entity.second.at("Controller"))->SetFlag(flag, val);
 			}
 		}
 	}
 }
 
 
+}
 }

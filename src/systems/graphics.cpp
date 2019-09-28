@@ -24,6 +24,8 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* METHOD DEFINITIONS */
@@ -78,14 +80,14 @@ void Graphics::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
-	for(Entity entity : this->engine->GetEntities({"VertexListComp", "ShaderComp", "PositionComp", "ScaleComp", "RotationComp"}))
+	for(Entity entity : this->engine->GetEntities({"VertexList", "Shader", "Position", "Scale", "Rotation"}))
 	{
 		this->DrawEntity(
-				dynamic_cast<VertexListComp*>(entity.second.at("VertexListComp")),
-				dynamic_cast<ShaderComp*>(entity.second.at("ShaderComp")),
-				dynamic_cast<PositionComp*>(entity.second.at("PositionComp")),
-				dynamic_cast<ScaleComp*>(entity.second.at("ScaleComp")),
-				dynamic_cast<RotationComp*>(entity.second.at("RotationComp"))
+				dynamic_cast<Comp::VertexList*>(entity.second.at("VertexList")),
+				dynamic_cast<Comp::Shader*>(entity.second.at("Shader")),
+				dynamic_cast<Comp::Position*>(entity.second.at("Position")),
+				dynamic_cast<Comp::Scale*>(entity.second.at("Scale")),
+				dynamic_cast<Comp::Rotation*>(entity.second.at("Rotation"))
 		);
 	}
 
@@ -96,12 +98,12 @@ void Graphics::Render()
 void Graphics::UpdateCamera()
 {
 	/* Cameras with a target
-	std::vector<Entity> cameras = this->engine->GetEntities({"PositionComp", "CameraTargetPosComp"});
+	std::vector<Entity> cameras = this->engine->GetEntities({"Position", "CameraTargetPosition"});
 	if(cameras.size() > 0)
 	{
 		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
-		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("PositionComp"))->GetPosition();
-		std::array<float, 3> cam_target_pos = dynamic_cast<CameraTargetPosComp*>(cam.second.at("CameraTargetPosComp"))->GetPosition();
+		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("Position"))->GetPosition();
+		std::array<float, 3> cam_target_pos = dynamic_cast<CameraTargetPosition*>(cam.second.at("CameraTargetPosition"))->GetPosition();
 		this->view = glm::lookAt(
 				glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]),
 				glm::vec3(cam_target_pos[0], cam_target_pos[1], cam_target_pos[2]),
@@ -110,12 +112,12 @@ void Graphics::UpdateCamera()
 	}*/
 
 	// Cameras with a direction
-	std::vector<Entity> cameras = this->engine->GetEntities({"PositionComp", "DirectionComp"});
+	std::vector<Entity> cameras = this->engine->GetEntities({"Position", "Direction"});
 	if(cameras.size() > 0)
 	{
 		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
-		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("PositionComp"))->GetPosition();
-		std::array<float, 3> cam_dir = dynamic_cast<DirectionComp*>(cam.second.at("DirectionComp"))->GetDirection();
+		std::array<float, 3> cam_pos = dynamic_cast<Comp::Position*>(cam.second.at("Position"))->GetPosition();
+		std::array<float, 3> cam_dir = dynamic_cast<Comp::Direction*>(cam.second.at("Direction"))->GetDirection();
 		glm::vec3 cameraPos = glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]);
 		glm::vec3 cameraDir = glm::vec3(cam_dir[0], cam_dir[1], cam_dir[2]);
 		this->view = glm::lookAt(
@@ -126,7 +128,7 @@ void Graphics::UpdateCamera()
 	}
 }
 
-void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, ScaleComp* scaleComp, RotationComp* rotComp)
+void Graphics::DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp)
 {
 	// Set VAO
 	glBindVertexArray(vertComp->GetVAO());
@@ -160,4 +162,5 @@ void Graphics::DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, Posi
 }
 
 
+}
 }

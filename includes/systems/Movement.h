@@ -14,6 +14,8 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* CLASS DECLARATION */
@@ -26,6 +28,7 @@ public:
 };
 
 
+}
 }
 
 

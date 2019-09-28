@@ -6,11 +6,11 @@
  */
 
 #include <components/CameraTargetPosition.h>
+#include <components/Controller.h>
 #include <random>
 #include <chrono>
 #include <functional>
 
-#include <components/Control.h>
 #include <components/RotaterLogic.h>
 #include <components/Shader.h>
 #include <components/Transform.h>
@@ -67,13 +67,13 @@ std::vector<Component*> Cube()
 
 	// Add components
 	std::vector<Component*> comps;
-	comps.push_back(new TF::VertexListComp(vertices, elements, 36));
-	comps.push_back(new TF::ShaderComp("../shaders/test.vert", "../shaders/test.frag"));
-	comps.push_back(new TF::PositionComp(r_float(), r_float(), r_float()));
-	TF::RotationComp* rc = new TF::RotationComp();
+	comps.push_back(new Comp::VertexList(vertices, elements, 36));
+	comps.push_back(new Comp::Shader("../shaders/test.vert", "../shaders/test.frag"));
+	comps.push_back(new Comp::Position(r_float(), r_float(), r_float()));
+	Comp::Rotation* rc = new Comp::Rotation();
 	comps.push_back(rc);
-	comps.push_back(new TF::RotaterLogic(rc));
-	comps.push_back(new TF::ScaleComp((r_float() + 1.0f) / 5.0f));
+	comps.push_back(new Comp::RotaterLogic(rc));
+	comps.push_back(new Comp::Scale((r_float() + 1.0f) / 5.0f));
 
 	return comps;
 }
@@ -82,9 +82,9 @@ std::vector<Component*> Camera()
 {
 	std::vector<Component*> comps;
 
-	comps.push_back(new TF::PositionComp(0, 0, 3));
-	comps.push_back(new TF::DirectionComp(0, 0, -1));
-	comps.push_back(new TF::ControlComp());
+	comps.push_back(new Comp::Position(0, 0, 3));
+	comps.push_back(new Comp::Direction(0, 0, -1));
+	comps.push_back(new Comp::Controller());
 
 	return comps;
 }

@@ -17,23 +17,26 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
 /* CLASS DEFINTIONS */
-class CameraTargetPosComp : public Component
+class CameraTargetPosition : public Component
 {
 private:
 	std::array<float, 3> position;
 
 public:
-	std::string GetType() const { return "CameraTargetPosComp"; }
-	CameraTargetPosComp(float x=0.0, float y=0.0, float z=0.0) { this->SetPosition(x, y, z); }
+	std::string GetType() const { return "CameraTargetPosition"; }
+	CameraTargetPosition(float x=0.0, float y=0.0, float z=0.0) { this->SetPosition(x, y, z); }
 
 	void SetPosition(float x, float y, float z) { this->position[0] = x; this->position[1] = y; this->position[2] = z; }
 	std::array<float, 3> GetPosition() { return this->position; }
 };
 
 
+}
 }
 
 

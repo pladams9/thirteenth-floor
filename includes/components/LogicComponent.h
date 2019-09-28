@@ -14,20 +14,22 @@
 #include <string>
 
 
-
 namespace TF
 {
+namespace Comp
+{
 
 
-class LogicComp : public Component
+class LogicComponent : public Component
 {
 public:
-	std::string GetType() const { return "LogicComp"; }
+	std::string GetType() const { return "LogicComponent"; }
 
 	virtual void Step()=0;
 };
 
 
+}
 }
 
 

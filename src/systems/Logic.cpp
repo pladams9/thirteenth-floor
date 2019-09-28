@@ -16,6 +16,8 @@ using namespace std::chrono;
 
 namespace TF
 {
+namespace Sys
+{
 
 
 LogicSystem::LogicSystem(Engine* engine) : System(engine)
@@ -33,9 +35,9 @@ void LogicSystem::Step()
 
 	while(time_elapsed > this->timeStep)
 	{
-		for(Entity entity : this->engine->GetEntities({"LogicComp"}))
+		for(Entity entity : this->engine->GetEntities({"LogicComponent"}))
 		{
-			dynamic_cast<LogicComp*>(entity.second.at("LogicComp"))->Step();
+			dynamic_cast<Comp::LogicComponent*>(entity.second.at("LogicComponent"))->Step();
 		}
 	time_elapsed -= this->timeStep;
 	}
@@ -45,4 +47,5 @@ void LogicSystem::Step()
 }
 
 
+}
 }

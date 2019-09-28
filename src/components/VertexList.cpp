@@ -11,9 +11,11 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
-VertexListComp::VertexListComp(std::vector<float> vertices, std::vector<int> elements, unsigned int count)
+VertexList::VertexList(std::vector<float> vertices, std::vector<int> elements, unsigned int count)
 {
 	// Generate buffers
 	glGenBuffers(1, &this->VBO_ID);
@@ -41,15 +43,16 @@ VertexListComp::VertexListComp(std::vector<float> vertices, std::vector<int> ele
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-unsigned int VertexListComp::GetVAO()
+unsigned int VertexList::GetVAO()
 {
 	return this->VAO_ID;
 }
 
-unsigned int VertexListComp::GetElementCount()
+unsigned int VertexList::GetElementCount()
 {
 	return this->EBO_count;
 }
 
 
+}
 }

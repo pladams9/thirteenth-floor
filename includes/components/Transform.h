@@ -16,49 +16,50 @@
 #include <math.h>
 
 
-
 namespace TF
+{
+namespace Comp
 {
 
 
 /* CLASS DEFINTIONS */
-class PositionComp : public Component
+class Position : public Component
 {
 private:
 	std::array<float, 3> position;
 
 public:
-	std::string GetType() const { return "PositionComp"; }
-	PositionComp(float x=0.0, float y=0.0, float z=0.0) { this->SetPosition(x, y, z); }
+	std::string GetType() const { return "Position"; }
+	Position(float x=0.0, float y=0.0, float z=0.0) { this->SetPosition(x, y, z); }
 
 	void SetPosition(float x, float y, float z) { this->position[0] = x; this->position[1] = y; this->position[2] = z; }
 	std::array<float, 3> GetPosition() { return this->position; }
 };
 
 
-class DirectionComp : public Component
+class Direction : public Component
 {
 private:
 	std::array<float, 3> direction;
 
 public:
-	std::string GetType() const { return "DirectionComp"; }
-	DirectionComp(float x=0.0, float y=0.0, float z=0.0) { this->SetDirection(x, y, z); }
+	std::string GetType() const { return "Direction"; }
+	Direction(float x=0.0, float y=0.0, float z=0.0) { this->SetDirection(x, y, z); }
 
 	void SetDirection(float x, float y, float z) { this->direction[0] = x; this->direction[1] = y; this->direction[2] = z; }
 	std::array<float, 3> GetDirection() { return this->direction; }
 };
 
 
-class RotationComp : public Component
+class Rotation : public Component
 {
 private:
 	float rotation;
 	std::array<float, 3> axis;
 
 public:
-	std::string GetType() const { return "RotationComp"; }
-	RotationComp(float r=0, float x=1.0, float y=0.0, float z=0.0) { this->SetRotation(r, x, y, z); }
+	std::string GetType() const { return "Rotation"; }
+	Rotation(float r=0, float x=1.0, float y=0.0, float z=0.0) { this->SetRotation(r, x, y, z); }
 
 	void SetRotation(float r, float x, float y, float z)
 	{
@@ -79,15 +80,15 @@ public:
 };
 
 
-class ScaleComp : public Component
+class Scale : public Component
 {
 private:
 	std::array<float, 3> scale;
 
 public:
-	std::string GetType() const { return "ScaleComp"; }
-	ScaleComp(float scale=1.0) { this->SetScale(scale); }
-	ScaleComp(float x, float y, float z) { this->SetScale(x, y, z); }
+	std::string GetType() const { return "Scale"; }
+	Scale(float scale=1.0) { this->SetScale(scale); }
+	Scale(float x, float y, float z) { this->SetScale(x, y, z); }
 
 	void SetScale(float x, float y, float z) { this->scale[0] = x; this->scale[1] = y; this->scale[2] = z; }
 	void SetScale(float scale) { this->scale[0] = scale; this->scale[1] = scale; this->scale[2] = scale; }
@@ -95,6 +96,7 @@ public:
 };
 
 
+}
 }
 
 

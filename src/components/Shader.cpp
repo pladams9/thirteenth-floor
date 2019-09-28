@@ -15,9 +15,11 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
-ShaderComp::ShaderComp(std::string vertShaderPath, std::string fragShaderPath)
+Shader::Shader(std::string vertShaderPath, std::string fragShaderPath)
 {
 	// Load shaders from file
 	std::fstream fs;
@@ -71,10 +73,11 @@ ShaderComp::ShaderComp(std::string vertShaderPath, std::string fragShaderPath)
 	glLinkProgram(this->shaderProgram);
 }
 
-unsigned int ShaderComp::GetProgram()
+unsigned int Shader::GetProgram()
 {
 	return this->shaderProgram;
 }
 
 
+}
 }

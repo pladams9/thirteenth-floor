@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef SYSTEMS_KEYBOARDCONTROLLER_H_
-#define SYSTEMS_KEYBOARDCONTROLLER_H_
+#ifndef SYSTEMS_KEYBOARDINPUT_H_
+#define SYSTEMS_KEYBOARDINPUT_H_
 
 
 #include <System.h>
@@ -14,13 +14,15 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* CLASS DECLARATION */
-class KeyboardControllerSystem : public System
+class KeyboardInput : public System
 {
 public:
-	KeyboardControllerSystem(Engine* eng);
+	KeyboardInput(Engine* eng);
 
 	void Step();
 
@@ -30,6 +32,7 @@ private:
 
 
 }
+}
 
 
-#endif /* SYSTEMS_KEYBOARDCONTROLLER_H_ */
+#endif /* SYSTEMS_KEYBOARDINPUT_H_ */

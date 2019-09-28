@@ -14,10 +14,12 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* METHOD DEFINITIONS */
-EventLoggerSystem::EventLoggerSystem(Engine* eng) : System(eng)
+EventLogger::EventLogger(Engine* eng) : System(eng)
 {
 	this->eventQueue.Listen("KEY_DOWN");
 	this->eventQueue.Listen("KEY_UP");
@@ -25,7 +27,7 @@ EventLoggerSystem::EventLoggerSystem(Engine* eng) : System(eng)
 	this->eventQueue.Listen("MOUSE_UP");
 }
 
-void EventLoggerSystem::Step()
+void EventLogger::Step()
 {
 	Event e;
 	while(this->eventQueue.PollEvents(e))
@@ -40,5 +42,5 @@ void EventLoggerSystem::Step()
 }
 
 
-
+}
 }

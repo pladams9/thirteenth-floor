@@ -14,12 +14,13 @@
 #include <string>
 
 
-
 namespace TF
+{
+namespace Comp
 {
 
 
-class ShaderComp : public Component
+class Shader : public Component
 {
 private:
 	unsigned int shaderProgram = 0;
@@ -27,13 +28,14 @@ private:
 	std::string fragShaderPath;
 
 public:
-	std::string GetType() const { return "ShaderComp"; }
-	ShaderComp(std::string vertShaderPath, std::string fragShaderPath);
+	std::string GetType() const { return "Shader"; }
+	Shader(std::string vertShaderPath, std::string fragShaderPath);
 
 	unsigned int GetProgram();
 };
 
 
+}
 }
 
 

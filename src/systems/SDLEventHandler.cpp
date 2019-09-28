@@ -6,9 +6,7 @@
  */
 
 #include <Events.h>
-#include <systems/SDLEvents.h>
-
-/* INCLUDES */
+#include <systems/SDLEventHandler.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
 
@@ -17,12 +15,14 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* METHOD DEFINITIONS */
-SDLEventSystem::SDLEventSystem(Engine* eng) : System(eng) {}
+SDLEventHandler::SDLEventHandler(Engine* eng) : System(eng) {}
 
-void SDLEventSystem::Step()
+void SDLEventHandler::Step()
 {
 	SDL_Event SDL_event;
 	while(SDL_PollEvent(&SDL_event))
@@ -78,4 +78,5 @@ void SDLEventSystem::Step()
 }
 
 
+}
 }

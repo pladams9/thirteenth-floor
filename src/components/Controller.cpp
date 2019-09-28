@@ -5,14 +5,16 @@
  *      Author: pladams9
  */
 
-#include <components/Control.h>
+#include <components/Controller.h>
 
 
 namespace TF
 {
+namespace Comp
+{
 
 
-ControlComp::ControlComp()
+Controller::Controller()
 {
 	this->flags["MOVE_LEFT"] = false;
 	this->flags["MOVE_RIGHT"] = false;
@@ -24,12 +26,12 @@ ControlComp::ControlComp()
 	this->flags["LOOK_DOWN"] = false;
 }
 
-void ControlComp::SetFlag(std::string key, bool val)
+void Controller::SetFlag(std::string key, bool val)
 {
 	this->flags[key] = val;
 }
 
-bool ControlComp::GetFlag(std::string key)
+bool Controller::GetFlag(std::string key)
 {
 	if(this->flags.find(key) != this->flags.end())
 	{
@@ -39,4 +41,5 @@ bool ControlComp::GetFlag(std::string key)
 }
 
 
+}
 }

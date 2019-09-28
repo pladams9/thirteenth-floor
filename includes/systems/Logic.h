@@ -15,7 +15,10 @@
 using namespace std::chrono;
 
 
-namespace TF {
+namespace TF
+{
+namespace Sys
+{
 
 
 class LogicSystem : public System
@@ -33,7 +36,7 @@ public:
 
 
 }
-
+}
 
 
 #endif /* SYSTEMS_LOGIC_H_ */

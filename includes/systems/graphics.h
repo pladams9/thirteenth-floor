@@ -18,15 +18,23 @@
 #include <System.h>
 
 
-namespace TF {
+namespace TF
+{
 
 
 /* FORWARD DECLARATIONS */
-class VertexListComp;
-class ShaderComp;
-class PositionComp;
-class ScaleComp;
-class RotationComp;
+namespace Comp
+{
+class VertexList;
+class Shader;
+class Position;
+class Scale;
+class Rotation;
+}
+
+
+namespace Sys
+{
 
 
 /* CLASS DECLARATION */
@@ -46,10 +54,11 @@ public:
 
 	void Render();
 	void UpdateCamera();
-	void DrawEntity(VertexListComp* vertComp, ShaderComp* shaderComp, PositionComp* posComp, ScaleComp* scaleComp, RotationComp* rotComp);
+	void DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp);
 };
 
 
+}
 }
 
 

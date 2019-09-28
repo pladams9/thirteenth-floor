@@ -5,6 +5,9 @@
  *      Author: pladams9
  */
 
+#ifndef COMPONENTS_CONTROLLER_H_
+#define COMPONENTS_CONTROLLER_H_
+
 /* INCLUDES */
 #include <Component.h>
 #include <unordered_map>
@@ -13,16 +16,18 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
-class ControlComp : public Component
+class Controller : public Component
 {
 private:
 	std::unordered_map<std::string, bool> flags;
 
 public:
-	std::string GetType() const { return "ControlComp"; }
-	ControlComp();
+	std::string GetType() const { return "Controller"; }
+	Controller();
 
 	void SetFlag(std::string key, bool val);
 	bool GetFlag(std::string key);
@@ -30,3 +35,6 @@ public:
 
 
 }
+}
+
+#endif /* COMPONENTS_CONTROLLER_H_ */

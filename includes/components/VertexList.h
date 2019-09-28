@@ -17,9 +17,11 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
-class VertexListComp : public Component
+class VertexList : public Component
 {
 private:
 	unsigned int VBO_ID = 0;
@@ -28,14 +30,15 @@ private:
 	unsigned int VAO_ID = 0;
 	std::vector<float> vertices;
 public:
-	std::string GetType() const { return "VertexListComp"; }
-	VertexListComp(std::vector<float> vertices, std::vector<int> elements, unsigned int count);
+	std::string GetType() const { return "VertexList"; }
+	VertexList(std::vector<float> vertices, std::vector<int> elements, unsigned int count);
 
 	unsigned int GetVAO();
 	unsigned int GetElementCount();
 };
 
 
+}
 }
 
 

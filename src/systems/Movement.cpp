@@ -5,6 +5,7 @@
  *      Author: pladams9
  */
 
+#include <components/Controller.h>
 #include <systems/Movement.h>
 
 /* INCLUDES */
@@ -14,12 +15,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <components/Control.h>
 #include <components/Transform.h>
 #include <Events.h>
 
 
 namespace TF
+{
+namespace Sys
 {
 
 
@@ -29,7 +31,7 @@ MovementSystem::MovementSystem(Engine* eng) : System(eng)
 
 void MovementSystem::Step()
 {
-	std::vector<Entity> entities = this->engine->GetEntities({"ControlComp", "PositionComp", "DirectionComp"});
+	std::vector<Entity> entities = this->engine->GetEntities({"Controller", "Position", "Direction"});
 
 	for(Entity entity : entities)
 	{
@@ -37,9 +39,9 @@ void MovementSystem::Step()
 		float speed = 0.01;
 		float rot_speed = 0.005;
 
-		ControlComp* control = dynamic_cast<ControlComp*>(entity.second.at("ControlComp"));
-		PositionComp* position = dynamic_cast<PositionComp*>(entity.second.at("PositionComp"));
-		DirectionComp* direction = dynamic_cast<DirectionComp*>(entity.second.at("DirectionComp"));
+		Comp::Controller* control = dynamic_cast<Comp::Controller*>(entity.second.at("Controller"));
+		Comp::Position* position = dynamic_cast<Comp::Position*>(entity.second.at("Position"));
+		Comp::Direction* direction = dynamic_cast<Comp::Direction*>(entity.second.at("Direction"));
 
 		std::array<float, 3> pos = position->GetPosition();
 		glm::vec3 g_pos = glm::vec3(pos[0], pos[1], pos[2]);
@@ -76,4 +78,4 @@ void MovementSystem::Step()
 
 
 }
-
+}

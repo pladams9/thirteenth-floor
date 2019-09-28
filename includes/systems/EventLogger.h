@@ -14,18 +14,21 @@
 
 namespace TF
 {
+namespace Sys
+{
 
 
 /* CLASS DECLARATION */
-class EventLoggerSystem : public System
+class EventLogger : public System
 {
 public:
-	EventLoggerSystem(Engine* eng);
+	EventLogger(Engine* eng);
 
 	void Step();
 };
 
 
+}
 }
 
 

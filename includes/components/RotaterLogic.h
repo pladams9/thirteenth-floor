@@ -15,15 +15,17 @@
 
 namespace TF
 {
+namespace Comp
+{
 
 
-class RotaterLogic : public LogicComp
+class RotaterLogic : public LogicComponent
 {
 private:
-	RotationComp* rotComp;
+	Rotation* rotComp;
 	float r = 0.0;
 public:
-	RotaterLogic(RotationComp* r) { this->rotComp = r; }
+	RotaterLogic(Rotation* r) { this->rotComp = r; }
 	void Step()
 	{
 		r += 0.05f;
@@ -33,5 +35,7 @@ public:
 
 
 }
+}
+
 
 #endif /* COMPONENTS_ROTATERLOGIC_H_ */
