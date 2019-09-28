@@ -43,6 +43,44 @@ void Engine::MainLoop()
 {
 	while(this->running)
 	{
+		for(Callback callback : frameStartCallbacks[FIRST])
+		{
+			//call callback
+		}
+		for(Callback callback : frameStartCallbacks[MIDDLE])
+		{
+			//call callback
+		}
+		for(auto it = frameStartCallbacks[LAST].rbegin(); it != frameStartCallbacks[LAST].rend();	++it)
+		{
+			//call callback
+		}
+
+		for(TimestepCallback callback : timestepCallbacks[FIRST])
+		{
+			//call callback
+		}
+		for(TimestepCallback callback : timestepCallbacks[MIDDLE])
+		{
+			//call callback
+		}
+		for(auto it = timestepCallbacks[LAST].rbegin(); it != timestepCallbacks[LAST].rend(); ++it)
+		{
+			//call callback
+		}
+
+		for(Callback callback : frameEndCallbacks[FIRST])
+		{
+			//call callback
+		}
+		for(Callback callback : frameEndCallbacks[MIDDLE])
+		{
+			//call callback
+		}
+		for(auto it = frameEndCallbacks[LAST].rbegin(); it != frameEndCallbacks[LAST].rend(); ++it)
+		{
+			//call callback
+		}
 
 
 		for(std::pair<int, System*> system : this->systems)
@@ -83,6 +121,21 @@ void Engine::AddComponent(Component* comp, EntityID entityID)
 	{
 		// TODO: error handling
 	}
+}
+
+void Engine::RegisterFrameStartCallback(Callback fn, LoopSubStage lss)
+{
+	this->frameStartCallbacks[lss].push_back(fn);
+}
+
+void Engine::RegisterTimeStepCallback(Callback fn, LoopSubStage lss, Milliseconds ms)
+{
+	this->timestepCallbacks[lss].push_back(TimestepCallback(ms, fn));
+}
+
+void Engine::RegisterFrameEndCallback(Callback fn, LoopSubStage lss)
+{
+	this->frameEndCallbacks[lss].push_back(fn);
 }
 
 std::vector<Entity> Engine::GetEntities(std::vector<ComponentType> required_comp_types, std::vector<ComponentType> optional_comp_types)
