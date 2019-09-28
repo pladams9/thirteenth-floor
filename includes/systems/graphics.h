@@ -15,7 +15,7 @@
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 
-#include <systems/system.h>
+#include <System.h>
 
 
 namespace TF {

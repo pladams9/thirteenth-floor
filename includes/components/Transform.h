@@ -5,12 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef COMPONENTS_TRANSFORMCOMPS_H_
-#define COMPONENTS_TRANSFORMCOMPS_H_
+#ifndef COMPONENTS_TRANSFORM_H_
+#define COMPONENTS_TRANSFORM_H_
 
 
 /* INCLUDES */
-#include <components/component.h>
+#include <Component.h>
 #include <string>
 #include <array>
 #include <math.h>
@@ -98,4 +98,4 @@ public:
 }
 
 
-#endif /* COMPONENTS_TRANSFORMCOMPS_H_ */
+#endif /* COMPONENTS_TRANSFORM_H_ */

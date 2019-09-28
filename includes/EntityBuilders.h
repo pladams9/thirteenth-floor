@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef BUILDERS_H_
-#define BUILDERS_H_
+#ifndef ENTITYBUILDERS_H_
+#define ENTITYBUILDERS_H_
 
 
 /* INCLUDES */
@@ -34,4 +34,4 @@ std::vector<Component*> Camera();
 }
 
 
-#endif /* BUILDERS_H_ */
+#endif /* ENTITYBUILDERS_H_ */

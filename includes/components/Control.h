@@ -6,8 +6,7 @@
  */
 
 /* INCLUDES */
-#include <components/component.h>
-
+#include <Component.h>
 #include <unordered_map>
 #include <string>
 

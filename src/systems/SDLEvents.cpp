@@ -5,14 +5,14 @@
  *      Author: pladams9
  */
 
+#include <Events.h>
 #include <systems/SDLEvents.h>
 
 /* INCLUDES */
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
 
-#include <events.h>
-#include <utilities.h>
+#include <Utilities.h>
 
 
 namespace TF

@@ -5,15 +5,12 @@
  *      Author: pladams9
  */
 
-#include <engine.h>
-
-
-/* INCLUDES */
+#include <components/LogicComponent.h>
+#include <Component.h>
+#include <Engine.h>
 #include <SDL2/SDL.h>
 
-#include <systems/system.h>
-#include <components/component.h>
-#include <components/logicComp.h>
+#include <System.h>
 
 namespace TF
 {

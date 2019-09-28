@@ -1,10 +1,10 @@
-#include <builders.h>
-#include <engine.h>
+#include <Engine.h>
+#include <EntityBuilders.h>
 #include <systems/graphics.h>
-#include <systems/logic.h>
 #include <systems/SDLEvents.h>
 #include <systems/EventLogger.h>
 #include <systems/KeyboardController.h>
+#include <systems/Logic.h>
 #include <systems/Movement.h>
 
 int main( int argc, char* args[] )

@@ -14,9 +14,9 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <events.h>
 #include <components/Control.h>
-#include <components/transformComps.h>
+#include <components/Transform.h>
+#include <Events.h>
 
 
 namespace TF

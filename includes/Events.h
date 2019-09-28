@@ -10,12 +10,12 @@
 
 
 /* INCLUDES */
+#include <Entity.h>
 #include <string>
 #include <unordered_map>
 #include <queue>
 #include <unordered_set>
 
-#include <entity.h>
 
 
 namespace TF

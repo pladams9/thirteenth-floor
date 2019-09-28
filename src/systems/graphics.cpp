@@ -5,10 +5,11 @@
  *      Author: pladams9
  */
 
-#include <components/shaderComp.h>
-#include <components/transformComps.h>
-#include <components/vertexListComp.h>
-#include <components/cameraTarget.h>
+#include <components/CameraTargetPosition.h>
+#include <components/Shader.h>
+#include <components/Transform.h>
+#include <components/VertexList.h>
+#include <Engine.h>
 #include <iostream>
 #include <array>
 
@@ -18,7 +19,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <engine.h>
 #include <systems/graphics.h>
 
 

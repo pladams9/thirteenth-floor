@@ -5,12 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef COMPONENTS_LOGICCOMP_H_
-#define COMPONENTS_LOGICCOMP_H_
+#ifndef COMPONENTS_LOGICCOMPONENT_H_
+#define COMPONENTS_LOGICCOMPONENT_H_
 
 
 /* INCLUDES */
-#include <components/component.h>
+#include <Component.h>
 #include <string>
 
 
@@ -31,4 +31,4 @@ public:
 }
 
 
-#endif /* COMPONENTS_LOGICCOMP_H_ */
+#endif /* COMPONENTS_LOGICCOMPONENT_H_ */

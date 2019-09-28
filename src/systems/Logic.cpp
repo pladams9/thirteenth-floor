@@ -5,15 +5,12 @@
  *      Author: pladams9
  */
 
-#include <systems/logic.h>
-
-
-/* INCLUDES */
+#include <components/LogicComponent.h>
+#include <Component.h>
+#include <systems/Logic.h>
 #include <vector>
 #include <string>
 
-#include <components/component.h>
-#include <components/logicComp.h>
 
 using namespace std::chrono;
 

@@ -5,12 +5,12 @@
  *      Author: pladams9
  */
 
+#include <Events.h>
 #include <systems/EventLogger.h>
 
 /* INCLUDES */
 #include <iostream>
 
-#include <events.h>
 
 namespace TF
 {

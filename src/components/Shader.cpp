@@ -5,7 +5,7 @@
  *      Author: pladams9
  */
 
-#include <components/shaderComp.h>
+#include <components/Shader.h>
 #include <fstream>
 #include <sstream>
 #include <iostream>

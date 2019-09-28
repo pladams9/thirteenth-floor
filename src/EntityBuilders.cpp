@@ -5,21 +5,18 @@
  *      Author: pladams9
  */
 
-#include <builders.h>
-
-
-/* INCLUDES */
+#include <components/CameraTargetPosition.h>
 #include <random>
 #include <chrono>
 #include <functional>
 
-#include <components/component.h>
-#include <components/rotater_logic.h>
-#include <components/shaderComp.h>
-#include <components/transformComps.h>
-#include <components/vertexListComp.h>
-#include <components/cameraTarget.h>
 #include <components/Control.h>
+#include <components/RotaterLogic.h>
+#include <components/Shader.h>
+#include <components/Transform.h>
+#include <components/VertexList.h>
+#include <Component.h>
+#include <EntityBuilders.h>
 
 
 namespace TF

@@ -9,8 +9,8 @@
 
 /* INCLUDES */
 #include <iostream>
-#include <events.h>
 #include <components/Control.h>
+#include <Events.h>
 
 
 namespace TF

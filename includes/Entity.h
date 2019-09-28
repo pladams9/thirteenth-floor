@@ -10,7 +10,7 @@
 
 
 /* INCLUDES */
-#include <components/component.h>
+#include <Component.h>
 
 
 namespace TF

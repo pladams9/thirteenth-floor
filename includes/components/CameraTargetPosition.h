@@ -5,13 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef COMPONENTS_CAMERATARGET_H_
-#define COMPONENTS_CAMERATARGET_H_
+#ifndef COMPONENTS_CAMERATARGETPOSITION_H_
+#define COMPONENTS_CAMERATARGETPOSITION_H_
 
 
 /* INCLUDES */
-#include <components/component.h>
-
+#include <Component.h>
 #include <string>
 #include <array>
 
@@ -38,4 +37,4 @@ public:
 }
 
 
-#endif /* COMPONENTS_CAMERATARGET_H_ */
+#endif /* COMPONENTS_CAMERATARGETPOSITION_H_ */

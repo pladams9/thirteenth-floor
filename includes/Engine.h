@@ -10,14 +10,14 @@
 
 
 /* INCLUDES */
+#include <Component.h>
 #include <unordered_map>
 #include <map>
 #include <string>
 #include <vector>
 
-#include <entity.h>
-#include <components/component.h>
-#include <events.h>
+#include <Entity.h>
+#include <Events.h>
 
 
 namespace TF
