@@ -32,6 +32,11 @@ std::unordered_map<std::string, EventType> KeyboardInput::eventMap = {
 /* METHOD DEFINITIONS */
 KeyboardInput::KeyboardInput(Engine* eng) : System(eng)
 {
+	this->engine->RegisterFrameStartCallback
+	(
+			[this]() { this->Step(); }
+	);
+
 	this->eventQueue.Listen("KEY_DOWN");
 	this->eventQueue.Listen("KEY_UP");
 }

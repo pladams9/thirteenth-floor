@@ -26,8 +26,6 @@ protected:
 
 public:
 	System(Engine* eng) : engine(eng), eventQueue(eng->GetEventManager()) {}
-	virtual ~System() =default;
-	virtual void Step() =0;
 };
 
 

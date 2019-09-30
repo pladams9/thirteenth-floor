@@ -5,27 +5,23 @@
  *      Author: pladams9
  */
 
-#include <components/LogicComponent.h>
-#include <Component.h>
 #include <Engine.h>
-#include <SDL2/SDL.h>
 
+
+/* INCLUDES */
 #include <System.h>
+#include <Component.h>
+#include <components/LogicComponent.h>
+
 
 namespace TF
 {
 
 
 /* METHOD DEFINITIONS */
-Engine::Engine()
-{
-	// Initialize SDL
-	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO);
-}
-
 Engine::~Engine()
 {
-	SDL_Quit();
+	// Destroy systems
 }
 
 void Engine::Start()
@@ -41,52 +37,49 @@ void Engine::Stop()
 
 void Engine::MainLoop()
 {
+	this->lastStep = std::chrono::steady_clock::now();
 	while(this->running)
 	{
-		for(Callback callback : frameStartCallbacks[FIRST])
-		{
-			//call callback
-		}
-		for(Callback callback : frameStartCallbacks[MIDDLE])
-		{
-			//call callback
-		}
-		for(auto it = frameStartCallbacks[LAST].rbegin(); it != frameStartCallbacks[LAST].rend();	++it)
-		{
-			//call callback
-		}
+		// FRAME START CALLBACKS
+		for(Callback callback : frameStartCallbacks[FIRST]) { callback(); }
+		for(Callback callback : frameStartCallbacks[MIDDLE]) { callback(); }
+		for(auto it = frameStartCallbacks[LAST].rbegin(); it != frameStartCallbacks[LAST].rend(); ++it) { (*it)(); }
 
-		for(TimestepCallback callback : timestepCallbacks[FIRST])
+		// TIMESTEP CALLBACKS
+		std::chrono::steady_clock::time_point new_time = std::chrono::steady_clock::now();
+		Milliseconds time_elapsed = std::chrono::duration_cast<Milliseconds>(new_time - this->lastStep);
+		for(TimestepCallback ts_callback : timestepCallbacks[FIRST])
 		{
-			//call callback
+			ts_callback.leftover += time_elapsed;
+			while(ts_callback.leftover > ts_callback.timestep)
+			{
+				ts_callback.leftover -= ts_callback.timestep;
+				ts_callback.callback();
+			}
 		}
-		for(TimestepCallback callback : timestepCallbacks[MIDDLE])
+		for(TimestepCallback ts_callback : timestepCallbacks[MIDDLE])
 		{
-			//call callback
+			ts_callback.leftover += time_elapsed;
+			while(ts_callback.leftover > ts_callback.timestep)
+			{
+				ts_callback.leftover -= ts_callback.timestep;
+				ts_callback.callback();
+			}
 		}
 		for(auto it = timestepCallbacks[LAST].rbegin(); it != timestepCallbacks[LAST].rend(); ++it)
 		{
-			//call callback
-		}
-
-		for(Callback callback : frameEndCallbacks[FIRST])
-		{
-			//call callback
-		}
-		for(Callback callback : frameEndCallbacks[MIDDLE])
-		{
-			//call callback
-		}
-		for(auto it = frameEndCallbacks[LAST].rbegin(); it != frameEndCallbacks[LAST].rend(); ++it)
-		{
-			//call callback
-		}
-
-
-		for(std::pair<int, System*> system : this->systems)
+			(*it).leftover += time_elapsed;
+			while((*it).leftover > (*it).timestep)
 			{
-			system.second->Step();
+				(*it).leftover -= (*it).timestep;
+				(*it).callback();
 			}
+		}
+
+		// FRAME END CALLBACKS
+		for(Callback callback : frameEndCallbacks[FIRST]) { callback(); }
+		for(Callback callback : frameEndCallbacks[MIDDLE]) { callback(); }
+		for(auto it = frameEndCallbacks[LAST].rbegin(); it != frameEndCallbacks[LAST].rend(); ++it) { (*it)(); }
 	}
 }
 
@@ -95,9 +88,9 @@ EventManager* Engine::GetEventManager()
 	return &this->eventManager;
 }
 
-void Engine::AddSystem(System* system, int priority)
+void Engine::AddSystem(System* system)
 {
-	this->systems.insert(std::pair<int, System*>(priority, system));
+	this->systems.push_back(system);
 }
 
 void Engine::AddEntity(std::vector<Component*> comps)
@@ -128,9 +121,13 @@ void Engine::RegisterFrameStartCallback(Callback fn, LoopSubStage lss)
 	this->frameStartCallbacks[lss].push_back(fn);
 }
 
-void Engine::RegisterTimeStepCallback(Callback fn, LoopSubStage lss, Milliseconds ms)
+void Engine::RegisterTimestepCallback(Callback fn, Milliseconds ms, LoopSubStage lss)
 {
-	this->timestepCallbacks[lss].push_back(TimestepCallback(ms, fn));
+	TimestepCallback tsc;
+	tsc.callback = fn;
+	tsc.timestep = ms;
+	tsc.leftover = Milliseconds(0.0);
+	this->timestepCallbacks[lss].push_back(tsc);
 }
 
 void Engine::RegisterFrameEndCallback(Callback fn, LoopSubStage lss)

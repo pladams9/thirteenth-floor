@@ -69,11 +69,11 @@ std::vector<Component*> Cube()
 	std::vector<Component*> comps;
 	comps.push_back(new Comp::VertexList(vertices, elements, 36));
 	comps.push_back(new Comp::Shader("../shaders/test.vert", "../shaders/test.frag"));
-	comps.push_back(new Comp::Position(r_float(), r_float(), r_float()));
+	comps.push_back(new Comp::Position(r_float() * 10, r_float() * 10, r_float() * 10));
 	Comp::Rotation* rc = new Comp::Rotation();
 	comps.push_back(rc);
 	comps.push_back(new Comp::RotaterLogic(rc));
-	comps.push_back(new Comp::Scale((r_float() + 1.0f) / 5.0f));
+	comps.push_back(new Comp::Scale((r_float() + 1.0f) / 2.0f));
 
 	return comps;
 }

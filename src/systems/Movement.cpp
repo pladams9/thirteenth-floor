@@ -27,7 +27,13 @@ namespace Sys
 
 /* METHOD DEFINITIONS */
 MovementSystem::MovementSystem(Engine* eng) : System(eng)
-{}
+{
+	this->engine->RegisterTimestepCallback
+	(
+			[this]() { this->Step(); },
+			Milliseconds(30)
+	);
+}
 
 void MovementSystem::Step()
 {
@@ -36,8 +42,8 @@ void MovementSystem::Step()
 	for(Entity entity : entities)
 	{
 		// TODO: make component speed
-		float speed = 0.01;
-		float rot_speed = 0.005;
+		float speed = 0.003;
+		float rot_speed = 0.0001;
 
 		Comp::Controller* control = dynamic_cast<Comp::Controller*>(entity.second.at("Controller"));
 		Comp::Position* position = dynamic_cast<Comp::Position*>(entity.second.at("Position"));

@@ -22,6 +22,12 @@ namespace Sys
 
 LogicSystem::LogicSystem(Engine* engine) : System(engine)
 {
+	this->engine->RegisterTimestepCallback
+	(
+			[this]() { this->Step(); },
+			Milliseconds(30.0)
+	);
+
 	this->lastStep = steady_clock::now();
 	this->timeStep = duration<double, std::milli>(30.0);
 	this->leftoverTime = duration<double>(0);

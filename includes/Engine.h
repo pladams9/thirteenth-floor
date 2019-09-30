@@ -31,25 +31,29 @@ class System;
 
 
 /* CLASS DECLARATIONS */
+using Milliseconds = std::chrono::duration<double, std::milli>;
+using Callback = std::function<void()>;
+struct TimestepCallback
+{
+	Callback callback;
+	Milliseconds timestep;
+	Milliseconds leftover;
+};
+
 class Engine
 {
-	using Milliseconds = std::chrono::duration<double, std::milli>;
-	using Callback = std::function<void(Milliseconds)>;
-	using TimestepCallback = std::pair<Milliseconds, Callback>;
-
 public:
-	Engine();
 	~Engine();
 
 	EventManager* GetEventManager();
-	void AddSystem(System* system, int priority=0);
+	void AddSystem(System* system);
 	void AddEntity(std::vector<Component*> comps);
 	void AddComponent(Component* comp, EntityID entityID);
 
 	enum LoopSubStage {FIRST, MIDDLE, LAST};
-	void RegisterFrameStartCallback(Callback fn, LoopSubStage lss);
-	void RegisterTimeStepCallback(Callback fn, LoopSubStage lss, Milliseconds ms);
-	void RegisterFrameEndCallback(Callback fn, LoopSubStage lss);
+	void RegisterFrameStartCallback(Callback fn, LoopSubStage lss = MIDDLE);
+	void RegisterTimestepCallback(Callback fn, Milliseconds ms, LoopSubStage lss = MIDDLE);
+	void RegisterFrameEndCallback(Callback fn, LoopSubStage lss = MIDDLE);
 
 	void Start();
 	void Stop();
@@ -60,11 +64,12 @@ public:
 private:
 	EventManager eventManager;
 
-	std::multimap<int, System*> systems;
+	std::vector<System*> systems;
 	EntityID nextEntityID = 0;
 	std::unordered_map<std::string, ComponentEntityMap> components;
 
 	bool running = false;
+	std::chrono::steady_clock::time_point lastStep;
 
 	std::array<std::vector<Callback>, 3> frameStartCallbacks;
 	std::array<std::vector<Callback>, 3> frameEndCallbacks;

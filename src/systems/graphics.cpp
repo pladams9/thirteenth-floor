@@ -13,7 +13,6 @@
 #include <iostream>
 #include <array>
 
-#include <SDL2/SDL.h>
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -32,22 +31,10 @@ namespace Sys
 Graphics::Graphics(Engine* engine, int win_width, int win_height, std::string win_title)
 : System(engine)
 {
-	// Setup OpenGL
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
-	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-	SDL_GL_SetSwapInterval(1);
-
-	// Create window & OpenGL context
-	this->window = SDL_CreateWindow(
-			"Window Title",
-			SDL_WINDOWPOS_UNDEFINED,
-			SDL_WINDOWPOS_UNDEFINED,
-			win_width, win_height,
-			SDL_WINDOW_OPENGL
+	this->engine->RegisterFrameEndCallback
+	(
+			[this]() { this->Step(); }
 	);
-	this->context = SDL_GL_CreateContext(this->window);
 
 	// Initialize GLEW
 	glewInit();
@@ -58,13 +45,6 @@ Graphics::Graphics(Engine* engine, int win_width, int win_height, std::string wi
 	this->view = glm::mat4(1.0f);
 
 	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.1f, 100.0f);
-}
-
-Graphics::~Graphics()
-{
-	// Clean up
-	SDL_GL_DeleteContext(this->context);
-	SDL_DestroyWindow(this->window);
 }
 
 void Graphics::Step()
@@ -92,7 +72,7 @@ void Graphics::Render()
 	}
 
 	// Swap buffers
-	SDL_GL_SwapWindow(this->window);
+
 }
 
 void Graphics::UpdateCamera()
