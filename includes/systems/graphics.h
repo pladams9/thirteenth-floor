@@ -44,7 +44,7 @@ private:
 	glm::mat4 view;
 	glm::mat4 projection;
 public:
-	Graphics(Engine* engine, int win_width, int win_height, std::string win_title);
+	Graphics(Engine* engine, int win_width, int win_height);
 
 	void Step();
 

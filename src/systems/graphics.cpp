@@ -28,7 +28,7 @@ namespace Sys
 
 
 /* METHOD DEFINITIONS */
-Graphics::Graphics(Engine* engine, int win_width, int win_height, std::string win_title)
+Graphics::Graphics(Engine* engine, int win_width, int win_height)
 : System(engine)
 {
 	this->engine->RegisterFrameEndCallback
@@ -43,7 +43,6 @@ Graphics::Graphics(Engine* engine, int win_width, int win_height, std::string wi
 
 	// Setup View & Projection Matrices
 	this->view = glm::mat4(1.0f);
-
 	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.1f, 100.0f);
 }
 

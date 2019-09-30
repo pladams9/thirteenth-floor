@@ -14,7 +14,7 @@ int main( int argc, char* args[] )
 
 	// Add systems
 	engine.AddSystem(new TF::Sys::SDLWrapper(&engine));
-	engine.AddSystem(new TF::Sys::Graphics(&engine, 640, 480, "SUPER AWESOME TEST WINDOW"));
+	engine.AddSystem(new TF::Sys::Graphics(&engine, 640, 480));
 	engine.AddSystem(new TF::Sys::LogicSystem(&engine));
 	engine.AddSystem(new TF::Sys::EventLogger(&engine));
 	engine.AddSystem(new TF::Sys::KeyboardInput(&engine));

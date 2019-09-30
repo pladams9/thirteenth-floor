@@ -59,7 +59,7 @@ void SDLWrapper::InitWindow()
 	SDL_DisplayMode dm;
 	SDL_GetDesktopDisplayMode(0, &dm);
 	int win_width = dm.w;
-	int win_height = dm.h;
+	int win_height = dm.h + 1;
 
 	// Set OpenGL attributes
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -74,7 +74,7 @@ void SDLWrapper::InitWindow()
 			SDL_WINDOWPOS_UNDEFINED,
 			SDL_WINDOWPOS_UNDEFINED,
 			win_width, win_height,
-			SDL_WINDOW_OPENGL
+			SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS
 	);
 	this->context = SDL_GL_CreateContext(this->window);
 }
