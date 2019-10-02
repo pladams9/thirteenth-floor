@@ -1,26 +1,38 @@
 /*
- * shaderComp.cpp
+ * Shader.cpp
  *
- *  Created on: Sep 16, 2019
+ *  Created on: Oct 1, 2019
  *      Author: pladams9
  */
 
-#include <components/Shader.h>
-#include <fstream>
+#include <systems/OpenGL/ShaderManager.h>
+
+
+/* INCLUDES */
 #include <sstream>
+#include <fstream>
 #include <iostream>
 
 #include <GL/glew.h>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 namespace TF
 {
-namespace Comp
+namespace Sys
+{
+namespace OpenGL
 {
 
 
-Shader::Shader(std::string vertShaderPath, std::string fragShaderPath)
+/* METHOD DEFINITIONS */
+void ShaderManager::LoadShader(std::string shader_name)
 {
+	std::string vertShaderPath = this->shaderPath + shader_name + ".vert";
+	std::string fragShaderPath = this->shaderPath + shader_name + ".frag";
+
 	// Load shaders from file
 	std::fstream fs;
 	std::stringstream buffer;
@@ -67,17 +79,32 @@ Shader::Shader(std::string vertShaderPath, std::string fragShaderPath)
 	}
 
 	// Link shaders to program
-	this->shaderProgram = glCreateProgram();
-	glAttachShader(this->shaderProgram, vertexShader);
-	glAttachShader(this->shaderProgram, fragmentShader);
-	glLinkProgram(this->shaderProgram);
+	unsigned int programID = glCreateProgram();
+	glAttachShader(programID, vertexShader);
+	glAttachShader(programID, fragmentShader);
+	glLinkProgram(programID);
+
+	// Store shader
+	this->shaders[shader_name] = programID;
 }
 
-unsigned int Shader::GetProgram()
+void ShaderManager::Use(std::string shader_name)
 {
-	return this->shaderProgram;
+	if(this->shaders.find(shader_name) == this->shaders.end())
+	{
+		this->LoadShader(shader_name);
+	}
+	glUseProgram(this->shaders.at(shader_name));
+	this->currentShader = this->shaders.at(shader_name);
+}
+
+void ShaderManager::SetUniformMat4f(std::string name, glm::mat4 data)
+{
+	int location = glGetUniformLocation(this->currentShader, name.c_str());
+	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(data));
 }
 
 
+}
 }
 }

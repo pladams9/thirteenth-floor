@@ -23,15 +23,13 @@ namespace Comp
 class Shader : public Component
 {
 private:
-	unsigned int shaderProgram = 0;
-	std::string vertShaderPath;
-	std::string fragShaderPath;
+	std::string name;
 
 public:
 	std::string GetType() const { return "Shader"; }
-	Shader(std::string vertShaderPath, std::string fragShaderPath);
+	Shader(std::string name) : name(name) {}
 
-	unsigned int GetProgram();
+	std::string GetName() { return name; }
 };
 
 

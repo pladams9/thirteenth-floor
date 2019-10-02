@@ -21,7 +21,10 @@ namespace TF
 /* METHOD DEFINITIONS */
 Engine::~Engine()
 {
-	// Destroy systems
+	for(System* system : this->systems)
+	{
+		delete system;
+	}
 }
 
 void Engine::Start()

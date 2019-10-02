@@ -12,10 +12,14 @@
 
 /* INCLUDES */
 #include <vector>
+#include <string>
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include <System.h>
+#include <systems/OpenGL/ShaderManager.h>
 
 
 namespace TF
@@ -26,10 +30,10 @@ namespace TF
 namespace Comp
 {
 class VertexList;
-class Shader;
 class Position;
 class Scale;
 class Rotation;
+class Shader;
 }
 
 
@@ -38,18 +42,32 @@ namespace Sys
 
 
 /* CLASS DECLARATION */
-class Graphics : public System
+class OpenGLRenderer : public System
 {
+public:
+	OpenGLRenderer(Engine* engine, int win_width, int win_height);
+
 private:
 	glm::mat4 view;
 	glm::mat4 projection;
-public:
-	Graphics(Engine* engine, int win_width, int win_height);
+
+	OpenGL::ShaderManager shaders;
 
 	void Step();
 
+	void UpdateView();
+
+	void UpdateLightingUniforms();
+
+	void CreateVBO();
+	void CreateEBO();
+	void CreateVAO();
+
+	void UpdateVBOs();
+	void UpdateEBOs();
+
 	void Render();
-	void UpdateCamera();
+
 	void DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp);
 };
 

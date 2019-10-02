@@ -28,6 +28,26 @@ std::string to_string(T arg)
 	return ss.str();
 }
 
+// Vector structs
+template <typename T>
+struct vec2
+{
+	T x, y;
+	vec2(T x, T y) : x(x), y(y) {};
+};
+
+template <typename T>
+struct vec3
+{
+  union
+  {
+    struct {T x, y, z;};
+    struct {T r, g, b;};
+    T vals[3];
+  };
+  vec3(T x, T y, T z) : x(x), y(y), z(z) {};
+};
+
 
 }
 }
