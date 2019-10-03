@@ -25,16 +25,15 @@ class VertexList : public Component
 {
 private:
 	unsigned int VBO_ID = 0;
-	unsigned int EBO_ID = 0;
-	unsigned int EBO_count = 0;
+	unsigned int count = 0;
 	unsigned int VAO_ID = 0;
 	std::vector<float> vertices;
 public:
 	std::string GetType() const { return "VertexList"; }
-	VertexList(std::vector<float> vertices, std::vector<int> elements, unsigned int count);
+	VertexList(std::vector<float> vertices, unsigned int count);
 
 	unsigned int GetVAO();
-	unsigned int GetElementCount();
+	unsigned int GetCount();
 };
 
 

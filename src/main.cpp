@@ -7,7 +7,7 @@
 #include <systems/OpenGLRenderer.h>
 #include <systems/SDLWrapper.h>
 
-int main( int argc, char* args[] )
+int main(int argc, char* args[])
 {
 	// Create Engine
 	TF::Engine engine;
@@ -21,7 +21,7 @@ int main( int argc, char* args[] )
 	engine.AddSystem(new TF::Sys::MovementSystem(&engine));
 
 	// Add entities
-	for(int i = 0; i < 200; ++i)
+	for(int i = 0; i < 300; ++i)
 	{
 		engine.AddEntity(TF::Create::Cube());
 	}

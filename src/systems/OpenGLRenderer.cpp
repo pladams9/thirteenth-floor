@@ -47,7 +47,7 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 
 	// Setup View & Projection Matrices
 	this->view = glm::mat4(1.0f);
-	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.1f, 500.0f);
+	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 1.0f, 500.0f);
 }
 
 void OpenGLRenderer::Step()
@@ -59,7 +59,7 @@ void OpenGLRenderer::Step()
 void OpenGLRenderer::Render()
 {
 	// Clear
-	glClearColor(0.1, 0.1, 0.2, 1.0);
+	glClearColor(0.02, 0.05, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
@@ -134,7 +134,7 @@ void OpenGLRenderer::DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shader
 	shaders.SetUniformMat4f("projection", this->projection);
 
 	// Draw Call
-	glDrawElements(GL_TRIANGLES, vertComp->GetElementCount(), GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_TRIANGLES, 0, vertComp->GetCount());
 
 	// Unbind VAO
 	glBindVertexArray(0);
