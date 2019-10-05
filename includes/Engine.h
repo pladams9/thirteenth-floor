@@ -18,8 +18,8 @@
 #include <vector>
 
 #include <Component.h>
+#include <engine/Events.h>
 #include <Entity.h>
-#include <Events.h>
 
 
 namespace TF

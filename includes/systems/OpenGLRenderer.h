@@ -20,6 +20,7 @@
 
 #include <System.h>
 #include <systems/OpenGL/ShaderManager.h>
+#include <systems/OpenGL/ModelManager.h>
 
 
 namespace TF
@@ -34,6 +35,7 @@ class Position;
 class Scale;
 class Rotation;
 class Shader;
+class ModelName;
 }
 
 
@@ -52,6 +54,7 @@ private:
 	glm::mat4 projection;
 
 	OpenGL::ShaderManager shaders;
+	OpenGL::ModelManager models;
 
 	void Step();
 
@@ -68,7 +71,7 @@ private:
 
 	void Render();
 
-	void DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp);
+	void DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp);
 };
 
 

@@ -10,7 +10,6 @@
 #include <random>
 #include <chrono>
 #include <functional>
-#include <iostream>
 
 #include <Component.h>
 #include <components/CameraTargetPosition.h>
@@ -19,6 +18,7 @@
 #include <components/Shader.h>
 #include <components/Transform.h>
 #include <components/VertexList.h>
+#include <components/ModelName.h>
 
 
 namespace TF
@@ -92,7 +92,8 @@ std::vector<Component*> Cube()
 
 	// Add components
 	std::vector<Component*> comps;
-	comps.push_back(new Comp::VertexList(vertices, 36));
+	//comps.push_back(new Comp::VertexList(vertices, 36));
+	comps.push_back(new Comp::ModelName("cube"));
 	comps.push_back(new Comp::Shader("test"));
 	float bounds = 20.0f;
 	comps.push_back(new Comp::Position(r_float() * bounds, r_float() * bounds, r_float() * bounds));

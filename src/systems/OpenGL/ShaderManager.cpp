@@ -11,12 +11,13 @@
 /* INCLUDES */
 #include <sstream>
 #include <fstream>
-#include <iostream>
 
 #include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "Logger.h"
 
 
 namespace TF
@@ -62,7 +63,9 @@ void ShaderManager::LoadShader(std::string shader_name)
 	if (!success)
 	{
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::stringstream error_msg;
+		error_msg << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog;
+		LOGGER().Log(ERROR, error_msg.str());
 	}
 
 	// Create fragment shader
@@ -75,7 +78,9 @@ void ShaderManager::LoadShader(std::string shader_name)
 	if (!success)
 	{
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
-		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
+		std::stringstream error_msg;
+		error_msg << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog;
+		LOGGER().Log(ERROR, error_msg.str());
 	}
 
 	// Link shaders to program

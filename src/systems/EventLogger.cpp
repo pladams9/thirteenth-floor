@@ -5,12 +5,13 @@
  *      Author: pladams9
  */
 
-#include <Events.h>
+#include <engine/Events.h>
 #include <systems/EventLogger.h>
 
 /* INCLUDES */
-#include <iostream>
+#include <sstream>
 
+#include "Logger.h"
 
 namespace TF
 {
@@ -37,12 +38,12 @@ void EventLogger::Step()
 	Event e;
 	while(this->eventQueue.PollEvents(e))
 	{
-		if(e.GetEventType() == "KEY_DOWN") std::cout << "KEY_DOWN, Keycode: " << e.GetStringData("keycode") << std::endl;
-		if(e.GetEventType() == "KEY_UP") std::cout << "KEY_UP, Keycode: " << e.GetStringData("keycode") << std::endl;
-		if(e.GetEventType() == "MOUSE_DOWN")
-			std::cout << "MOUSE_DOWN, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y") << std::endl;
-		if(e.GetEventType() == "MOUSE_UP")
-			std::cout << "MOUSE_UP, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y") << std::endl;
+		std::stringstream log_msg;
+		if(e.GetEventType() == "KEY_DOWN") log_msg << "KEY_DOWN, Keycode: " << e.GetStringData("keycode");
+		if(e.GetEventType() == "KEY_UP") log_msg << "KEY_UP, Keycode: " << e.GetStringData("keycode");
+		if(e.GetEventType() == "MOUSE_DOWN") log_msg << "MOUSE_DOWN, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y");
+		if(e.GetEventType() == "MOUSE_UP") log_msg << "MOUSE_UP, x, y: " << e.GetStringData("x") << ", " << e.GetStringData("y");
+		LOGGER().Log(INFO, log_msg.str());
 	}
 }
 

@@ -6,8 +6,7 @@
  */
 
 #include <components/Controller.h>
-#include <iostream>
-#include <Events.h>
+#include <engine/Events.h>
 #include <systems/KeyboardInput.h>
 
 

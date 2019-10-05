@@ -9,7 +9,6 @@
 
 
 /* INCLUDES */
-#include <iostream>
 #include <array>
 
 #include <GL/glew.h>
@@ -19,6 +18,7 @@
 
 #include <components/CameraTargetPosition.h>
 #include <components/Shader.h>
+#include <components/ModelName.h>
 #include <components/Transform.h>
 #include <components/VertexList.h>
 #include <Engine.h>
@@ -63,10 +63,10 @@ void OpenGLRenderer::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
-	for(Entity entity : this->engine->GetEntities({"VertexList", "Shader", "Position", "Scale", "Rotation"}))
+	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Position", "Scale", "Rotation"}))
 	{
 		this->DrawEntity(
-				dynamic_cast<Comp::VertexList*>(entity.second.at("VertexList")),
+				dynamic_cast<Comp::ModelName*>(entity.second.at("VertexList")),
 				dynamic_cast<Comp::Shader*>(entity.second.at("Shader")),
 				dynamic_cast<Comp::Position*>(entity.second.at("Position")),
 				dynamic_cast<Comp::Scale*>(entity.second.at("Scale")),
@@ -112,29 +112,31 @@ void OpenGLRenderer::UpdateView()
 }
 
 
-void OpenGLRenderer::DrawEntity(Comp::VertexList* vertComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp)
+void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp)
 {
+	// Get Model
+	OpenGL::Model model = this->models.GetModel(modelComp->GetName());
 	// Set VAO
-	glBindVertexArray(vertComp->GetVAO());
+	glBindVertexArray(model.VAO);
 
 	// Set shader
 	this->shaders.Use(shaderComp->GetName());
 
 	// Set Matrices
-	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 model_matrix = glm::mat4(1.0f);
 	std::array<float, 3> pos = posComp->GetPosition();
 	std::array<float, 3> scale = scaleComp->GetScale();
 	std::array<float, 3> r_axis = rotComp->GetRotationAxis();
-	model = glm::translate(model, glm::vec3(pos[0], pos[1], pos[2]));
-	model = glm::rotate(model, rotComp->GetRotation(), glm::vec3(r_axis[0], r_axis[1], r_axis[2]));
-	model = glm::scale(model, glm::vec3(scale[0], scale[1], scale[2]));
+	model_matrix = glm::translate(model_matrix, glm::vec3(pos[0], pos[1], pos[2]));
+	model_matrix = glm::rotate(model_matrix, rotComp->GetRotation(), glm::vec3(r_axis[0], r_axis[1], r_axis[2]));
+	model_matrix = glm::scale(model_matrix, glm::vec3(scale[0], scale[1], scale[2]));
 
-	shaders.SetUniformMat4f("model", model);
+	shaders.SetUniformMat4f("model", model_matrix);
 	shaders.SetUniformMat4f("view", this->view);
 	shaders.SetUniformMat4f("projection", this->projection);
 
 	// Draw Call
-	glDrawArrays(GL_TRIANGLES, 0, vertComp->GetCount());
+	glDrawArrays(GL_TRIANGLES, 0, model.count);
 
 	// Unbind VAO
 	glBindVertexArray(0);

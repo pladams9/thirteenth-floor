@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef EVENTS_H_
-#define EVENTS_H_
+#ifndef ENGINE_EVENTS_H_
+#define ENGINE_EVENTS_H_
 
 
 /* INCLUDES */
@@ -83,4 +83,4 @@ public:
 }
 
 
-#endif /* EVENTS_H_ */
+#endif /* ENGINE_EVENTS_H_ */

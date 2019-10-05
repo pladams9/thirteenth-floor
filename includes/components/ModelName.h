@@ -9,7 +9,32 @@
 #define COMPONENTS_MODELNAME_H_
 
 
+/* INCLUDES */
+#include <Component.h>
+#include <string>
 
+
+namespace TF
+{
+namespace Comp
+{
+
+
+class ModelName : public Component
+{
+private:
+	std::string name;
+
+public:
+	std::string GetType() const { return "ModelName"; }
+	ModelName(std::string name) : name(name) {}
+
+	std::string GetName() { return name; }
+};
+
+
+}
+}
 
 
 #endif /* COMPONENTS_MODELNAME_H_ */
