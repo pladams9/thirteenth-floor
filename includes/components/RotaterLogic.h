@@ -11,7 +11,6 @@
 
 /* INCLUDES */
 #include <components/LogicComponent.h>
-#include <components/Transform.h>
 
 namespace TF
 {
@@ -22,7 +21,6 @@ namespace Comp
 class RotaterLogic : public LogicComponent
 {
 private:
-	Rotation* rotComp;
 	float r = 0.0;
 public:
 	RotaterLogic(Rotation* r) { this->rotComp = r; }

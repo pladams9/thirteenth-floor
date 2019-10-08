@@ -30,10 +30,7 @@ namespace TF
 /* FORWARD DECLARATIONS */
 namespace Comp
 {
-class VertexList;
-class Position;
-class Scale;
-class Rotation;
+class Transform;
 class Shader;
 class ModelName;
 }
@@ -60,18 +57,9 @@ private:
 
 	void UpdateView();
 
-	void UpdateLightingUniforms();
-
-	void CreateVBO();
-	void CreateEBO();
-	void CreateVAO();
-
-	void UpdateVBOs();
-	void UpdateEBOs();
-
 	void Render();
 
-	void DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp);
+	void DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Transform* transform);
 };
 
 

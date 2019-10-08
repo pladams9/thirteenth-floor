@@ -12,6 +12,8 @@
 #include <System.h>
 #include <Component.h>
 #include <components/LogicComponent.h>
+#include "Utilities.h"
+#include "Logger.h"
 
 
 namespace TF
@@ -51,7 +53,10 @@ void Engine::MainLoop()
 		// TIMESTEP CALLBACKS
 		std::chrono::steady_clock::time_point new_time = std::chrono::steady_clock::now();
 		Milliseconds time_elapsed = std::chrono::duration_cast<Milliseconds>(new_time - this->lastStep);
-		for(TimestepCallback ts_callback : timestepCallbacks[FIRST])
+		this->lastStep = new_time;
+		LOGGER().Log(INFO, "Frame Length: " + Util::to_string(time_elapsed.count()) + "ms");
+
+		for(TimestepCallback& ts_callback : timestepCallbacks[FIRST])
 		{
 			ts_callback.leftover += time_elapsed;
 			while(ts_callback.leftover > ts_callback.timestep)
@@ -60,7 +65,7 @@ void Engine::MainLoop()
 				ts_callback.callback();
 			}
 		}
-		for(TimestepCallback ts_callback : timestepCallbacks[MIDDLE])
+		for(TimestepCallback& ts_callback : timestepCallbacks[MIDDLE])
 		{
 			ts_callback.leftover += time_elapsed;
 			while(ts_callback.leftover > ts_callback.timestep)

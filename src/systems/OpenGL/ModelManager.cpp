@@ -81,7 +81,6 @@ void ModelManager::LoadModel(std::string model_name)
 
 Model ModelManager::GetModel(std::string model_name)
 {
-	TF::LOGGER().Log(DEBUG, "Getting model");
 	Model model;
 	if(this->models.find(model_name) == this->models.end())
 	{

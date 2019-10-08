@@ -35,22 +35,38 @@ MovementSystem::MovementSystem(Engine* eng) : System(eng)
 
 void MovementSystem::Step()
 {
-	std::vector<Entity> entities = this->engine->GetEntities({"Controller", "Position", "Direction"});
+	std::vector<Entity> entities = this->engine->GetEntities({"Controller", "Transform"});
 
 	for(Entity entity : entities)
 	{
 		// TODO: make component speed
-		float speed = 0.003;
-		float rot_speed = 0.0001;
+		float speed = 0.8;
+		float rot_speed = 0.04;
 
 		Comp::Controller* control = dynamic_cast<Comp::Controller*>(entity.second.at("Controller"));
-		Comp::Position* position = dynamic_cast<Comp::Position*>(entity.second.at("Position"));
-		Comp::Direction* direction = dynamic_cast<Comp::Direction*>(entity.second.at("Direction"));
+		Comp::Transform* transform = dynamic_cast<Comp::Transform*>(entity.second.at("Transform"));
 
-		std::array<float, 3> pos = position->GetPosition();
-		glm::vec3 g_pos = glm::vec3(pos[0], pos[1], pos[2]);
-		std::array<float, 3> dir = direction->GetDirection();
-		glm::vec3 g_dir = glm::vec3(dir[0], dir[1], dir[2]);
+		Util::vec3d pos = transform->GetPosition();
+		glm::vec3 g_pos = glm::vec3(pos.x, pos.y, pos.z);
+		Util::vec3d rot = transform->GetRotation();
+
+		// Rotation
+		if(control->GetFlag("LOOK_UP")) rot.pitch += rot_speed;
+		if(control->GetFlag("LOOK_DOWN")) rot.pitch -= rot_speed;
+		if(control->GetFlag("TURN_LEFT")) rot.yaw -= rot_speed;
+		if(control->GetFlag("TURN_RIGHT")) rot.yaw += rot_speed;
+
+		if(rot.pitch > 1.5) rot.pitch = 1.5;
+		if(rot.pitch < -1.5) rot.pitch = -1.5;
+
+		transform->SetRotation(rot.yaw, rot.pitch, rot.roll);
+
+		// Get direction vector
+		glm::vec3 g_dir;
+		g_dir.x = cos(rot.pitch) * cos(rot.yaw);
+		g_dir.y = sin(rot.pitch);
+		g_dir.z = cos(rot.pitch) * sin(rot.yaw);
+		g_dir = glm::normalize(g_dir);
 
 		// Position
 		if(control->GetFlag("MOVE_LEFT")) g_pos -= glm::normalize(glm::cross(g_dir, glm::vec3(0,1,0))) * speed;
@@ -58,25 +74,7 @@ void MovementSystem::Step()
 		if(control->GetFlag("MOVE_FORWARD")) g_pos += g_dir * speed;
 		if(control->GetFlag("MOVE_BACKWARD")) g_pos -= g_dir * speed;
 
-		position->SetPosition(g_pos.x, g_pos.y, g_pos.z);
-
-		// Direction
-		float pitch = atan2(g_dir.y, (sqrt((g_dir.x*g_dir.x)+(g_dir.z*g_dir.z))));
-		float yaw = atan2(g_dir.z, g_dir.x);
-
-		if(control->GetFlag("LOOK_UP")) pitch += rot_speed;
-		if(control->GetFlag("LOOK_DOWN")) pitch -= rot_speed;
-		if(control->GetFlag("TURN_LEFT")) yaw -= rot_speed;
-		if(control->GetFlag("TURN_RIGHT")) yaw += rot_speed;
-
-		if(pitch > 1.5) pitch = 1.5;
-		if(pitch < -1.5) pitch = -1.5;
-
-		g_dir.x = cos(pitch) * cos(yaw);
-		g_dir.y = sin(pitch);
-		g_dir.z = cos(pitch) * sin(yaw);
-		g_dir = glm::normalize(g_dir);
-		direction->SetDirection(g_dir.x, g_dir.y, g_dir.z);
+		transform->SetPosition(g_pos.x, g_pos.y, g_pos.z);
 	}
 }
 

@@ -22,6 +22,7 @@
 #include <components/Transform.h>
 #include <components/VertexList.h>
 #include <Engine.h>
+#include "Logger.h"
 
 
 namespace TF
@@ -41,6 +42,7 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 
 	// Initialize GLEW
 	glewInit();
+
 	glEnable(GL_DEPTH_TEST);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	//glEnable(GL_CULL_FACE);
@@ -56,6 +58,7 @@ void OpenGLRenderer::Step()
 	this->Render();
 }
 
+
 void OpenGLRenderer::Render()
 {
 	// Clear
@@ -63,14 +66,12 @@ void OpenGLRenderer::Render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw components
-	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Position", "Scale", "Rotation"}))
+	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Transform"}))
 	{
 		this->DrawEntity(
-				dynamic_cast<Comp::ModelName*>(entity.second.at("VertexList")),
+				dynamic_cast<Comp::ModelName*>(entity.second.at("ModelName")),
 				dynamic_cast<Comp::Shader*>(entity.second.at("Shader")),
-				dynamic_cast<Comp::Position*>(entity.second.at("Position")),
-				dynamic_cast<Comp::Scale*>(entity.second.at("Scale")),
-				dynamic_cast<Comp::Rotation*>(entity.second.at("Rotation"))
+				dynamic_cast<Comp::Transform*>(entity.second.at("Transform"))
 		);
 	}
 
@@ -95,14 +96,19 @@ void OpenGLRenderer::UpdateView()
 	}*/
 
 	// Cameras with a direction
-	std::vector<Entity> cameras = this->engine->GetEntities({"Position", "Direction"});
+	std::vector<Entity> cameras = this->engine->GetEntities({"Transform", "Direction"});
 	if(cameras.size() > 0)
 	{
 		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
-		std::array<float, 3> cam_pos = dynamic_cast<Comp::Position*>(cam.second.at("Position"))->GetPosition();
-		std::array<float, 3> cam_dir = dynamic_cast<Comp::Direction*>(cam.second.at("Direction"))->GetDirection();
-		glm::vec3 cameraPos = glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]);
-		glm::vec3 cameraDir = glm::vec3(cam_dir[0], cam_dir[1], cam_dir[2]);
+		Comp::Transform* transform = dynamic_cast<Comp::Transform*>(cam.second.at("Transform"));
+		Util::vec3d cam_pos = transform->GetPosition();
+		glm::vec3 cameraPos = glm::vec3(cam_pos.x, cam_pos.y, cam_pos.z);
+		Util::vec3d cam_rot = transform->GetRotation();
+		glm::vec3 cameraDir;
+		cameraDir.x = cos(cam_rot.pitch) * cos(cam_rot.yaw);
+		cameraDir.y = sin(cam_rot.pitch);
+		cameraDir.z = cos(cam_rot.pitch) * sin(cam_rot.yaw);
+		cameraDir = glm::normalize(cameraDir);
 		this->view = glm::lookAt(
 				cameraPos,
 				cameraPos + cameraDir,
@@ -112,7 +118,7 @@ void OpenGLRenderer::UpdateView()
 }
 
 
-void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Position* posComp, Comp::Scale* scaleComp, Comp::Rotation* rotComp)
+void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Transform* transform)
 {
 	// Get Model
 	OpenGL::Model model = this->models.GetModel(modelComp->GetName());
@@ -124,12 +130,15 @@ void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shader
 
 	// Set Matrices
 	glm::mat4 model_matrix = glm::mat4(1.0f);
-	std::array<float, 3> pos = posComp->GetPosition();
-	std::array<float, 3> scale = scaleComp->GetScale();
-	std::array<float, 3> r_axis = rotComp->GetRotationAxis();
-	model_matrix = glm::translate(model_matrix, glm::vec3(pos[0], pos[1], pos[2]));
-	model_matrix = glm::rotate(model_matrix, rotComp->GetRotation(), glm::vec3(r_axis[0], r_axis[1], r_axis[2]));
-	model_matrix = glm::scale(model_matrix, glm::vec3(scale[0], scale[1], scale[2]));
+	Util::vec3d pos = transform->GetPosition();
+	Util::vec3d rotation = transform->GetRotation();
+	Util::vec3d scale = transform->GetScale();
+
+	model_matrix = glm::translate(model_matrix, glm::vec3(pos.x, pos.y, pos.z));
+	model_matrix = glm::rotate(model_matrix, (float)rotation.yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+	model_matrix = glm::rotate(model_matrix, (float)rotation.pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+	model_matrix = glm::rotate(model_matrix, (float)rotation.roll, glm::vec3(0.0f, 0.0f, 1.0f));
+	model_matrix = glm::scale(model_matrix, glm::vec3(scale.x, scale.y, scale.z));
 
 	shaders.SetUniformMat4f("model", model_matrix);
 	shaders.SetUniformMat4f("view", this->view);

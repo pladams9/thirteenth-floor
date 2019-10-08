@@ -14,10 +14,10 @@
 #include <Component.h>
 #include <components/CameraTargetPosition.h>
 #include <components/Controller.h>
-#include <components/RotaterLogic.h>
+//#include <components/RotaterLogic.h>
 #include <components/Shader.h>
 #include <components/Transform.h>
-#include <components/VertexList.h>
+#include <components/Velocity.h>
 #include <components/ModelName.h>
 
 
@@ -46,61 +46,22 @@ float r_float()
 /* FUNCTION DEFINITIONS */
 std::vector<Component*> Cube()
 {
-	std::vector<float> vertices = {
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f,  0.0f,  1.0f,
-
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f, -1.0f,  0.0f,  0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f,  0.0f,  0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, -1.0f,  0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, -1.0f,  0.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		 0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f,  1.0f,  0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f,  1.0f,  0.0f
-	};
-
 	// Add components
 	std::vector<Component*> comps;
-	//comps.push_back(new Comp::VertexList(vertices, 36));
 	comps.push_back(new Comp::ModelName("cube"));
 	comps.push_back(new Comp::Shader("test"));
 	float bounds = 20.0f;
-	comps.push_back(new Comp::Position(r_float() * bounds, r_float() * bounds, r_float() * bounds));
-	Comp::Rotation* rc = new Comp::Rotation();
-	comps.push_back(rc);
-	//comps.push_back(new Comp::RotaterLogic(rc));
-	comps.push_back(new Comp::Scale(1.5f + (r_float())));
+	Comp::Transform* t = new Comp::Transform;
+	t->SetPosition(
+			r_float() * bounds,
+			r_float() * bounds,
+			r_float() * bounds
+			);
+	comps.push_back(t);
+	Comp::Velocity* v = new Comp::Velocity;
+	v->SetMaxVelocity(0.01);
+	v->SetVelocity(r_float(),r_float(),r_float());
+	comps.push_back(v);
 
 	return comps;
 }
@@ -109,8 +70,8 @@ std::vector<Component*> Camera()
 {
 	std::vector<Component*> comps;
 
-	comps.push_back(new Comp::Position(0, 0, 0));
-	comps.push_back(new Comp::Direction(0, 0, -1));
+	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 25), Util::vec3d(3.14, 0, 0)));
+	comps.push_back(new Comp::Direction(0.5, 0, -1));
 	comps.push_back(new Comp::Controller());
 
 	return comps;
