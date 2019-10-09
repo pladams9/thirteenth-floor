@@ -33,7 +33,7 @@ public:
 	Logger();
 	~Logger();
 
-	void Log(LogLevel level, std::string message);
+	void Log(LogLevel level, std::string message, bool screen_only = false);
 	void SetLogThreshold(LogLevel file, LogLevel screen);
 
 private:

@@ -10,9 +10,10 @@
 
 
 /* INCLUDES */
-#include <Component.h>
 #include <string>
-#include <array>
+
+#include "Component.h"
+#include "Utilities.h"
 
 
 namespace TF
@@ -24,15 +25,18 @@ namespace Comp
 /* CLASS DEFINTIONS */
 class CameraTargetPosition : public Component
 {
-private:
-	std::array<float, 3> position;
-
 public:
 	std::string GetType() const { return "CameraTargetPosition"; }
-	CameraTargetPosition(float x=0.0, float y=0.0, float z=0.0) { this->SetPosition(x, y, z); }
+	CameraTargetPosition(Util::vec3d position = Util::vec3d(0.0, 0.0, 0.0)) : _position(position) {}
+	CameraTargetPosition(double x, double y, double z) : _position(Util::vec3d(0.0, 0.0, 0.0)) {}
 
-	void SetPosition(float x, float y, float z) { this->position[0] = x; this->position[1] = y; this->position[2] = z; }
-	std::array<float, 3> GetPosition() { return this->position; }
+	void SetPosition(Util::vec3d new_position) { _position = new_position; }
+	void SetPosition(double x, double y, double z) { _position = Util::vec3d(x, y, z); }
+
+	Util::vec3d GetPosition() { return _position; }
+
+private:
+	Util::vec3d _position;
 };
 
 

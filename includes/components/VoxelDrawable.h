@@ -5,11 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef VOXELDRAWABLE_H_
-#define VOXELDRAWABLE_H_
+#ifndef COMPONENTS_VOXELDRAWABLE_H_
+#define COMPONENTS_VOXELDRAWABLE_H_
 
 
 /* INCLUDES */
+#include <components/Voxel.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
@@ -17,7 +18,6 @@
 
 #include "Component.h"
 #include "Utilities.h"
-#include "Voxel.h"
 
 
 namespace TF
@@ -48,4 +48,4 @@ public:
 }
 
 
-#endif /* VOXELDRAWABLE_H_ */
+#endif /* COMPONENTS_VOXELDRAWABLE_H_ */

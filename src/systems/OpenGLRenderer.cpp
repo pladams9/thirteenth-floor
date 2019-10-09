@@ -16,6 +16,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "components/Camera.h"
 #include <components/CameraTargetPosition.h>
 #include <components/Shader.h>
 #include <components/ModelName.h>
@@ -69,9 +70,9 @@ void OpenGLRenderer::Render()
 	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Transform"}))
 	{
 		this->DrawEntity(
-				dynamic_cast<Comp::ModelName*>(entity.second.at("ModelName")),
-				dynamic_cast<Comp::Shader*>(entity.second.at("Shader")),
-				dynamic_cast<Comp::Transform*>(entity.second.at("Transform"))
+				static_cast<Comp::ModelName*>(entity.second.at("ModelName")),
+				static_cast<Comp::Shader*>(entity.second.at("Shader")),
+				static_cast<Comp::Transform*>(entity.second.at("Transform"))
 		);
 	}
 
@@ -81,29 +82,41 @@ void OpenGLRenderer::Render()
 
 void OpenGLRenderer::UpdateView()
 {
-	/* Cameras with a target
-	std::vector<Entity> cameras = this->engine->GetEntities({"Position", "CameraTargetPosition"});
-	if(cameras.size() > 0)
+	std::vector<Entity> cameras = this->engine->GetEntities({"Camera", "Transform"}, {"CameraTargetPosition"});
+	Entity active_camera;
+	bool camera_exists = false;
+	for(Entity camera : cameras)
 	{
-		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
-		std::array<float, 3> cam_pos = dynamic_cast<PositionComp*>(cam.second.at("Position"))->GetPosition();
-		std::array<float, 3> cam_target_pos = dynamic_cast<CameraTargetPosition*>(cam.second.at("CameraTargetPosition"))->GetPosition();
+		if(static_cast<Comp::Camera*>(camera.second.at("Camera"))->IsActive())
+		{
+			active_camera = camera;
+			camera_exists = true;
+			break;
+		}
+	}
+	if(!camera_exists) return;
+
+	Comp::Transform* camera_transform = static_cast<Comp::Transform*>(active_camera.second.at("Transform"));
+	Util::vec3d cam_pos = camera_transform->GetPosition();
+	glm::vec3 cameraPos = glm::vec3(cam_pos.x, cam_pos.y, cam_pos.z);
+
+	if(active_camera.second.at("CameraTargetPosition"))
+	{
+		// Camera with target
+		Comp::CameraTargetPosition* target_position =
+				static_cast<Comp::CameraTargetPosition*>(active_camera.second.at("CameraTargetPosition"));
+		Util::vec3d target_pos = target_position->GetPosition();
+		glm::vec3 targetPos = glm::vec3(target_pos.x, target_pos.y, target_pos.z);
 		this->view = glm::lookAt(
-				glm::vec3(cam_pos[0], cam_pos[1], cam_pos[2]),
-				glm::vec3(cam_target_pos[0], cam_target_pos[1], cam_target_pos[2]),
+				cameraPos,
+				glm::vec3(targetPos.x, targetPos.y, targetPos.z),
 				glm::vec3(0.0f, 1.0f, 0.0f)
 		);
-	}*/
-
-	// Cameras with a direction
-	std::vector<Entity> cameras = this->engine->GetEntities({"Transform", "Direction"});
-	if(cameras.size() > 0)
+	}
+	else
 	{
-		Entity cam = cameras[0]; // Just take the first one found; TODO: deal with multiple cameras
-		Comp::Transform* transform = dynamic_cast<Comp::Transform*>(cam.second.at("Transform"));
-		Util::vec3d cam_pos = transform->GetPosition();
-		glm::vec3 cameraPos = glm::vec3(cam_pos.x, cam_pos.y, cam_pos.z);
-		Util::vec3d cam_rot = transform->GetRotation();
+		// Standard camera
+		Util::vec3d cam_rot = camera_transform->GetRotation();
 		glm::vec3 cameraDir;
 		cameraDir.x = cos(cam_rot.pitch) * cos(cam_rot.yaw);
 		cameraDir.y = sin(cam_rot.pitch);

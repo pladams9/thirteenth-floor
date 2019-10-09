@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef VOXEL_H_
-#define VOXEL_H_
+#ifndef COMPONENTS_VOXEL_H_
+#define COMPONENTS_VOXEL_H_
 
 
 namespace TF
@@ -20,4 +20,4 @@ using VoxelType = unsigned int;
 }
 
 
-#endif /* VOXEL_H_ */
+#endif /* COMPONENTS_VOXEL_H_ */

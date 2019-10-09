@@ -72,7 +72,7 @@ Logger::~Logger()
 	this->logFile.close();
 }
 
-void Logger::Log(LogLevel level, std::string message)
+void Logger::Log(LogLevel level, std::string message, bool screen_only)
 {
 	if(level > this->fileThreshold && level > this->screenThreshold) return;
 
@@ -98,7 +98,7 @@ void Logger::Log(LogLevel level, std::string message)
 
 	output << message << "\n";
 
-	if(level <= this->fileThreshold)
+	if((level <= this->fileThreshold) && (!screen_only))
 	{
 		this->logFile << output.str();
 		this->logFile.flush();

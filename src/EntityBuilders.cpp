@@ -15,6 +15,7 @@
 #include <components/CameraTargetPosition.h>
 #include <components/Controller.h>
 //#include <components/RotaterLogic.h>
+#include "components/Camera.h"
 #include <components/Shader.h>
 #include <components/Transform.h>
 #include <components/Velocity.h>
@@ -71,7 +72,8 @@ std::vector<Component*> Camera()
 	std::vector<Component*> comps;
 
 	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 25), Util::vec3d(3.14, 0, 0)));
-	comps.push_back(new Comp::Direction(0.5, 0, -1));
+	comps.push_back(new Comp::Camera());
+	//comps.push_back(new Comp::CameraTargetPosition());
 	comps.push_back(new Comp::Controller());
 
 	return comps;

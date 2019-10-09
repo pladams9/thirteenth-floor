@@ -59,7 +59,7 @@ void KeyboardInput::Step()
 		for(Entity entity : entities)
 		{
 			{
-				dynamic_cast<Comp::Controller*>(entity.second.at("Controller"))->SetFlag(flag, val);
+				static_cast<Comp::Controller*>(entity.second.at("Controller"))->SetFlag(flag, val);
 			}
 		}
 	}

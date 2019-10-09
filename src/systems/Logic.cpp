@@ -43,7 +43,7 @@ void LogicSystem::Step()
 	{
 		for(Entity entity : this->engine->GetEntities({"LogicComponent"}))
 		{
-			dynamic_cast<Comp::LogicComponent*>(entity.second.at("LogicComponent"))->Step();
+			static_cast<Comp::LogicComponent*>(entity.second.at("LogicComponent"))->Step();
 		}
 	time_elapsed -= this->timeStep;
 	}

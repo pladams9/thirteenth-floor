@@ -54,7 +54,7 @@ void Engine::MainLoop()
 		std::chrono::steady_clock::time_point new_time = std::chrono::steady_clock::now();
 		Milliseconds time_elapsed = std::chrono::duration_cast<Milliseconds>(new_time - this->lastStep);
 		this->lastStep = new_time;
-		LOGGER().Log(INFO, "Frame Length: " + Util::to_string(time_elapsed.count()) + "ms");
+		LOGGER().Log(INFO, "Frame Length: " + Util::to_string(time_elapsed.count()) + "ms", true);
 
 		for(TimestepCallback& ts_callback : timestepCallbacks[FIRST])
 		{
@@ -196,6 +196,10 @@ std::vector<Entity> Engine::GetEntities(std::vector<ComponentType> required_comp
 			if(this->components[type].find(e) != this->components[type].end())
 			{
 				ctm.insert(std::pair<ComponentType, Component*>(type, this->components[type][e]));
+			}
+			else
+			{
+				ctm.insert(std::pair<ComponentType, Component*>(type, nullptr));
 			}
 		}
 		entities.push_back(Entity(e, ctm));
