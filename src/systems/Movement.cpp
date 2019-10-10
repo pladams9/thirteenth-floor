@@ -43,8 +43,8 @@ void MovementSystem::Step()
 		float speed = 0.8;
 		float rot_speed = 0.04;
 
-		Comp::Controller* control = static_cast<Comp::Controller*>(entity.second.at("Controller"));
-		Comp::Transform* transform = static_cast<Comp::Transform*>(entity.second.at("Transform"));
+		Comp::Controller* control = static_cast<Comp::Controller*>(entity["Controller"]);
+		Comp::Transform* transform = static_cast<Comp::Transform*>(entity["Transform"]);
 
 		Util::vec3d pos = transform->GetPosition();
 		glm::vec3 g_pos = glm::vec3(pos.x, pos.y, pos.z);

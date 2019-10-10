@@ -21,7 +21,6 @@
 #include <components/Shader.h>
 #include <components/ModelName.h>
 #include <components/Transform.h>
-#include <components/VertexList.h>
 #include <Engine.h>
 #include "Logger.h"
 
@@ -70,9 +69,9 @@ void OpenGLRenderer::Render()
 	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Transform"}))
 	{
 		this->DrawEntity(
-				static_cast<Comp::ModelName*>(entity.second.at("ModelName")),
-				static_cast<Comp::Shader*>(entity.second.at("Shader")),
-				static_cast<Comp::Transform*>(entity.second.at("Transform"))
+				static_cast<Comp::ModelName*>(entity["ModelName"]),
+				static_cast<Comp::Shader*>(entity["Shader"]),
+				static_cast<Comp::Transform*>(entity["Transform"])
 		);
 	}
 
@@ -87,7 +86,7 @@ void OpenGLRenderer::UpdateView()
 	bool camera_exists = false;
 	for(Entity camera : cameras)
 	{
-		if(static_cast<Comp::Camera*>(camera.second.at("Camera"))->IsActive())
+		if(static_cast<Comp::Camera*>(camera["Camera"])->IsActive())
 		{
 			active_camera = camera;
 			camera_exists = true;
@@ -96,15 +95,15 @@ void OpenGLRenderer::UpdateView()
 	}
 	if(!camera_exists) return;
 
-	Comp::Transform* camera_transform = static_cast<Comp::Transform*>(active_camera.second.at("Transform"));
+	Comp::Transform* camera_transform = static_cast<Comp::Transform*>(active_camera["Transform"]);
 	Util::vec3d cam_pos = camera_transform->GetPosition();
 	glm::vec3 cameraPos = glm::vec3(cam_pos.x, cam_pos.y, cam_pos.z);
 
-	if(active_camera.second.at("CameraTargetPosition"))
+	if(active_camera["CameraTargetPosition"])
 	{
 		// Camera with target
 		Comp::CameraTargetPosition* target_position =
-				static_cast<Comp::CameraTargetPosition*>(active_camera.second.at("CameraTargetPosition"));
+				static_cast<Comp::CameraTargetPosition*>(active_camera["CameraTargetPosition"]);
 		Util::vec3d target_pos = target_position->GetPosition();
 		glm::vec3 targetPos = glm::vec3(target_pos.x, target_pos.y, target_pos.z);
 		this->view = glm::lookAt(

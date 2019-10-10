@@ -65,7 +65,7 @@ private:
 	EventManager eventManager;
 
 	std::vector<System*> systems;
-	EntityID nextEntityID = 0;
+	EntityID nextEntityID = 1;
 	std::unordered_map<std::string, ComponentEntityMap> components;
 
 	bool running = false;

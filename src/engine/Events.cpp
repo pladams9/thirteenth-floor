@@ -33,6 +33,11 @@ std::string Event::GetStringData(std::string key)
 	return this->eventData.at(key);
 }
 
+EntityID Event::GetEntityID(std::string key)
+{
+	return this->eventEntities.at(key);
+}
+
 // class EventQueue
 EventQueue::EventQueue(EventManager* event_manager)
 {

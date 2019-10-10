@@ -35,8 +35,8 @@ void Physics::Step()
 
 	for(Entity entity : entities)
 	{
-		Comp::Transform* transform = static_cast<Comp::Transform*>(entity.second.at("Transform"));
-		Comp::Velocity* velocity = static_cast<Comp::Velocity*>(entity.second.at("Velocity"));
+		Comp::Transform* transform = static_cast<Comp::Transform*>(entity["Transform"]);
+		Comp::Velocity* velocity = static_cast<Comp::Velocity*>(entity["Velocity"]);
 		transform->Translate(velocity->GetVelocity());
 	}
 }

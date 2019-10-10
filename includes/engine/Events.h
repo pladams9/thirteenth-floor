@@ -17,7 +17,6 @@
 #include <unordered_set>
 
 
-
 namespace TF
 {
 
@@ -34,10 +33,6 @@ using EventQueueID = unsigned int;
 /* CLASS DEFINITIONS */
 class Event
 {
-private:
-	EventType eventType;
-	std::unordered_map<std::string, std::string> eventData;
-	std::unordered_map<std::string, EntityID> eventEntities;
 public:
 	Event();
 	Event(
@@ -47,6 +42,12 @@ public:
 	);
 	EventType GetEventType();
 	std::string GetStringData(std::string key);
+	EntityID GetEntityID(std::string key);
+
+private:
+	EventType eventType;
+	std::unordered_map<std::string, std::string> eventData;
+	std::unordered_map<std::string, EntityID> eventEntities;
 };
 
 class EventQueue
