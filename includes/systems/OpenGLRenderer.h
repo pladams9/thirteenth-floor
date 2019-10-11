@@ -11,6 +11,7 @@
 
 
 /* INCLUDES */
+#include <engine/System.h>
 #include <vector>
 #include <string>
 
@@ -18,7 +19,6 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include <System.h>
 #include <systems/OpenGL/ShaderManager.h>
 #include <systems/OpenGL/ModelManager.h>
 

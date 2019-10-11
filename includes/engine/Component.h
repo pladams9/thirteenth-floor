@@ -5,8 +5,8 @@
  *      Author: pladams9
  */
 
-#ifndef COMPONENT_H_
-#define COMPONENT_H_
+#ifndef ENGINE_COMPONENT_H_
+#define ENGINE_COMPONENT_H_
 
 
 /* INCLUDES */
@@ -34,4 +34,4 @@ using ComponentTypeMap = std::unordered_map<ComponentType, Component*>;
 }
 
 
-#endif /* COMPONENT_H_ */
+#endif /* ENGINE_COMPONENT_H_ */

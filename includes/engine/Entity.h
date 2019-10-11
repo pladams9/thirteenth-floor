@@ -5,12 +5,12 @@
  *      Author: pladams9
  */
 
-#ifndef ENTITY_H_
-#define ENTITY_H_
+#ifndef ENGINE_ENTITY_H_
+#define ENGINE_ENTITY_H_
 
 
 /* INCLUDES */
-#include <Component.h>
+#include <engine/Component.h>
 
 
 namespace TF
@@ -20,6 +20,10 @@ namespace TF
 /* TYPEDEFS */
 using EntityID = unsigned int;
 using ComponentEntityMap = std::unordered_map<EntityID, Component*>;
+
+
+/* CONSTANTS */
+const EntityID NULL_ENTITY = 0;
 
 /* CLASS DEFINITION */
 class Entity
@@ -39,7 +43,7 @@ public:
 	EntityID GetID() { return _entityID; }
 
 private:
-	EntityID _entityID = 0;
+	EntityID _entityID = NULL_ENTITY;
 	ComponentTypeMap _components;
 
 };
@@ -48,4 +52,4 @@ private:
 }
 
 
-#endif /* ENTITY_H_ */
+#endif /* ENGINE_ENTITY_H_ */

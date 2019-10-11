@@ -9,7 +9,7 @@
 #define COMPONENTS_CONTROLLER_H_
 
 /* INCLUDES */
-#include <Component.h>
+#include <engine/Component.h>
 #include <unordered_map>
 #include <string>
 

@@ -10,9 +10,9 @@
 
 
 /* INCLUDES */
+#include <engine/Component.h>
 #include <string>
 
-#include "Component.h"
 #include "Utilities.h"
 
 

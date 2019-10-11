@@ -10,6 +10,7 @@
 
 
 /* INCLUDES */
+#include <engine/Component.h>
 #include <functional>
 #include <chrono>
 #include <unordered_map>
@@ -17,9 +18,8 @@
 #include <string>
 #include <vector>
 
-#include <Component.h>
+#include <engine/Entity.h>
 #include <engine/Events.h>
-#include <Entity.h>
 
 
 namespace TF

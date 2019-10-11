@@ -5,13 +5,13 @@
  *      Author: pladams9
  */
 
-#ifndef SYSTEM_H_
-#define SYSTEM_H_
+#ifndef ENGINE_SYSTEM_H_
+#define ENGINE_SYSTEM_H_
 
 
 /* INCLUDES */
+#include <engine/Engine.h>
 #include <engine/Events.h>
-#include <Engine.h>
 
 namespace TF
 {
@@ -32,4 +32,4 @@ public:
 }
 
 
-#endif /* SYSTEM_H_ */
+#endif /* ENGINE_SYSTEM_H_ */

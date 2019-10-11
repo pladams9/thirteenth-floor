@@ -11,12 +11,12 @@
 
 /* INCLUDES */
 #include <components/Voxel.h>
+#include <engine/Component.h>
 #include <string>
 #include <vector>
 #include <unordered_map>
 #include <tuple>
 
-#include "Component.h"
 #include "Utilities.h"
 
 

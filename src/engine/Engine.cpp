@@ -5,13 +5,10 @@
  *      Author: pladams9
  */
 
-#include <Engine.h>
-
-
-/* INCLUDES */
-#include <System.h>
-#include <Component.h>
 #include <components/LogicComponent.h>
+#include <engine/Component.h>
+#include <engine/Engine.h>
+#include <engine/System.h>
 #include "Utilities.h"
 #include "Logger.h"
 

@@ -11,7 +11,6 @@
 #include <chrono>
 #include <functional>
 
-#include <Component.h>
 #include <components/CameraTargetPosition.h>
 #include <components/Controller.h>
 //#include <components/RotaterLogic.h>
@@ -20,6 +19,7 @@
 #include <components/Transform.h>
 #include <components/Velocity.h>
 #include <components/ModelName.h>
+#include <engine/Component.h>
 
 
 namespace TF

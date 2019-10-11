@@ -6,7 +6,7 @@
  */
 
 #include <components/LogicComponent.h>
-#include <Component.h>
+#include <engine/Component.h>
 #include <systems/Logic.h>
 #include <vector>
 #include <string>
