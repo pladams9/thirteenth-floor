@@ -22,7 +22,7 @@ namespace Sys
 
 LogicSystem::LogicSystem(Engine* engine) : System(engine)
 {
-	this->engine->RegisterTimestepCallback
+	this->_engine->RegisterTimestepCallback
 	(
 			[this]() { this->Step(); },
 			Milliseconds(30.0)
@@ -41,7 +41,7 @@ void LogicSystem::Step()
 
 	while(time_elapsed > this->timeStep)
 	{
-		for(Entity entity : this->engine->GetEntities({"LogicComponent"}))
+		for(Entity entity : this->_engine->GetEntities({"LogicComponent"}))
 		{
 			static_cast<Comp::LogicComponent*>(entity["LogicComponent"])->Step();
 		}

@@ -31,21 +31,21 @@ std::unordered_map<std::string, EventType> KeyboardInput::eventMap = {
 /* METHOD DEFINITIONS */
 KeyboardInput::KeyboardInput(Engine* eng) : System(eng)
 {
-	this->engine->RegisterFrameStartCallback
+	this->_engine->RegisterFrameStartCallback
 	(
 			[this]() { this->Step(); }
 	);
 
-	this->eventQueue.Listen("KEY_DOWN");
-	this->eventQueue.Listen("KEY_UP");
+	this->_eventQueue.Listen("KEY_DOWN");
+	this->_eventQueue.Listen("KEY_UP");
 }
 
 void KeyboardInput::Step()
 {
-	std::vector<Entity> entities = this->engine->GetEntities({"Controller"});
+	std::vector<Entity> entities = this->_engine->GetEntities({"Controller"});
 
 	Event e;
-	while(this->eventQueue.PollEvents(e))
+	while(this->_eventQueue.PollEvents(e))
 	{
 		std::string keycode = e.GetStringData("keycode");
 		std::string flag;

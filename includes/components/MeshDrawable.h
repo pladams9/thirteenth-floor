@@ -1,8 +1,9 @@
-/*
- * Drawable.h
+/**
+ * MeshDrawable.h
  *
- *  Created on: Oct 6, 2019
- *      Author: pladams9
+ * Indicates that an entity can be drawn as a single mesh, and gives access to
+ * the appropriate mesh/shader/material info.
+ *
  */
 
 #ifndef COMPONENTS_MESHDRAWABLE_H_
@@ -10,8 +11,9 @@
 
 
 /* INCLUDES */
-#include <engine/Component.h>
 #include <string>
+
+#include "engine/Component.h"
 
 #include "Utilities.h"
 
@@ -32,7 +34,7 @@ public:
 	MeshDrawable(Util::Drawable drawable)
 	: _drawable(drawable) {}
 
-	std::string GetDrawable() { return _drawable; }
+	Util::Drawable GetDrawable() { return _drawable; }
 };
 
 

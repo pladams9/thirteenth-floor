@@ -21,7 +21,7 @@ namespace Sys
 Physics::Physics(Engine* eng)
 : System(eng)
 {
-	this->engine->RegisterTimestepCallback(
+	this->_engine->RegisterTimestepCallback(
 			[this]() { this->Step(); },
 			Milliseconds(30.0)
 	);
@@ -31,7 +31,7 @@ void Physics::Step()
 	// TODO: Update acceleration
 
 	// Apply acceleration
-	std::vector<Entity> entities = this->engine->GetEntities({"Transform", "Velocity"});
+	std::vector<Entity> entities = this->_engine->GetEntities({"Transform", "Velocity"});
 
 	for(Entity entity : entities)
 	{

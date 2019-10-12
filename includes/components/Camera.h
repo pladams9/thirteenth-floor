@@ -10,8 +10,9 @@
 
 
 /* INCLUDES */
-#include <engine/Component.h>
 #include <string>
+
+#include "engine/Component.h"
 
 
 namespace TF
@@ -27,7 +28,7 @@ public:
 	Camera(bool active = true) : _active(active) {}
 
 	void SetActive(bool active) { _active = active; }
-	bool IsActive() { return _active; }
+	bool IsActive() const { return _active; }
 
 private:
 	bool _active;

@@ -1,27 +1,24 @@
-/*
- * graphics.cpp
+/**
+ * OpenGLRenderer.cpp
  *
- *  Created on: Sep 13, 2019
- *      Author: pladams9
  */
 
-#include <systems/OpenGLRenderer.h>
+#include "systems/OpenGLRenderer.h"
 
 
 /* INCLUDES */
 #include <array>
 
-#include <GL/glew.h>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "GL/glew.h"
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 #include "components/Camera.h"
-#include <components/CameraTargetPosition.h>
-#include <components/Shader.h>
-#include <components/ModelName.h>
-#include <components/Transform.h>
-#include <engine/Engine.h>
+#include "components/CameraTargetPosition.h"
+#include "components/MeshDrawable.h"
+#include "components/Transform.h"
+#include "engine/Engine.h"
 #include "Logger.h"
 
 
@@ -35,7 +32,7 @@ namespace Sys
 OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 : System(engine)
 {
-	this->engine->RegisterFrameEndCallback
+	_engine->RegisterFrameEndCallback
 	(
 			[this]() { this->Step(); }
 	);
@@ -48,14 +45,14 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 	//glEnable(GL_CULL_FACE);
 
 	// Setup View & Projection Matrices
-	this->view = glm::mat4(1.0f);
-	this->projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 1.0f, 500.0f);
+	_view = glm::mat4(1.0f);
+	_projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 1.0f, 500.0f);
 }
 
 void OpenGLRenderer::Step()
 {
-	this->UpdateView();
-	this->Render();
+	UpdateView();
+	Render();
 }
 
 
@@ -65,23 +62,21 @@ void OpenGLRenderer::Render()
 	glClearColor(0.02, 0.05, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Draw components
-	for(Entity entity : this->engine->GetEntities({"ModelName", "Shader", "Transform"}))
+	// TODO: Draw voxel groups
+
+	// Draw single meshes
+	for(Entity entity : _engine->GetEntities({"MeshDrawable", "Transform"}))
 	{
-		this->DrawEntity(
-				static_cast<Comp::ModelName*>(entity["ModelName"]),
-				static_cast<Comp::Shader*>(entity["Shader"]),
+		DrawMesh(
+				static_cast<Comp::MeshDrawable*>(entity["MeshDrawable"]),
 				static_cast<Comp::Transform*>(entity["Transform"])
 		);
 	}
-
-	// Swap buffers
-
 }
 
 void OpenGLRenderer::UpdateView()
 {
-	std::vector<Entity> cameras = this->engine->GetEntities({"Camera", "Transform"}, {"CameraTargetPosition"});
+	std::vector<Entity> cameras = _engine->GetEntities({"Camera", "Transform"}, {"CameraTargetPosition"});
 	Entity active_camera;
 	bool camera_exists = false;
 	for(Entity camera : cameras)
@@ -106,7 +101,7 @@ void OpenGLRenderer::UpdateView()
 				static_cast<Comp::CameraTargetPosition*>(active_camera["CameraTargetPosition"]);
 		Util::vec3d target_pos = target_position->GetPosition();
 		glm::vec3 targetPos = glm::vec3(target_pos.x, target_pos.y, target_pos.z);
-		this->view = glm::lookAt(
+		_view = glm::lookAt(
 				cameraPos,
 				glm::vec3(targetPos.x, targetPos.y, targetPos.z),
 				glm::vec3(0.0f, 1.0f, 0.0f)
@@ -121,7 +116,7 @@ void OpenGLRenderer::UpdateView()
 		cameraDir.y = sin(cam_rot.pitch);
 		cameraDir.z = cos(cam_rot.pitch) * sin(cam_rot.yaw);
 		cameraDir = glm::normalize(cameraDir);
-		this->view = glm::lookAt(
+		_view = glm::lookAt(
 				cameraPos,
 				cameraPos + cameraDir,
 				glm::vec3(0.0f, 1.0f, 0.0f)
@@ -130,15 +125,14 @@ void OpenGLRenderer::UpdateView()
 }
 
 
-void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Transform* transform)
+void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform)
 {
-	// Get Model
-	OpenGL::Model model = this->models.GetModel(modelComp->GetName());
-	// Set VAO
+	Util::Drawable drawable = meshDrawable->GetDrawable();
+
+	OpenGL::Model model = _models.GetModel(drawable.modelName);
 	glBindVertexArray(model.VAO);
 
-	// Set shader
-	this->shaders.Use(shaderComp->GetName());
+	_shaders.Use(drawable.shaderName);
 
 	// Set Matrices
 	glm::mat4 model_matrix = glm::mat4(1.0f);
@@ -152,9 +146,9 @@ void OpenGLRenderer::DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shader
 	model_matrix = glm::rotate(model_matrix, (float)rotation.roll, glm::vec3(0.0f, 0.0f, 1.0f));
 	model_matrix = glm::scale(model_matrix, glm::vec3(scale.x, scale.y, scale.z));
 
-	shaders.SetUniformMat4f("model", model_matrix);
-	shaders.SetUniformMat4f("view", this->view);
-	shaders.SetUniformMat4f("projection", this->projection);
+	_shaders.SetUniformMat4f("model", model_matrix);
+	_shaders.SetUniformMat4f("view", _view);
+	_shaders.SetUniformMat4f("projection", _projection);
 
 	// Draw Call
 	glDrawArrays(GL_TRIANGLES, 0, model.count);

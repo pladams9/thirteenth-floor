@@ -25,12 +25,12 @@ SDLWrapper::SDLWrapper(Engine* eng)
 	this->InitSDL();
 	this->InitWindow();
 
-	this->engine->RegisterFrameStartCallback
+	this->_engine->RegisterFrameStartCallback
 	(
 			[this]{ this->HandleSDLEvents(); },
 			Engine::FIRST
 	);
-	this->engine->RegisterFrameEndCallback
+	this->_engine->RegisterFrameEndCallback
 	(
 			[this]{ this->SwapWindow(); },
 			Engine::LAST
@@ -98,23 +98,23 @@ void SDLWrapper::HandleSDLEvents()
 		switch(SDL_event.type)
 		{
 		case SDL_QUIT :
-			this->engine->Stop();
+			this->_engine->Stop();
 			break;
 
 		case SDL_KEYDOWN :
 			if(SDL_event.key.repeat > 0) break; // Disregard key repeats
-			this->engine->GetEventManager()->TriggerEvent(Event(
+			this->_engine->GetEventManager()->TriggerEvent(Event(
 					"KEY_DOWN",
 					{
 							{"keycode", Util::to_string(SDL_event.key.keysym.sym)}
 					}
 			));
 
-			if(SDL_event.key.keysym.sym == SDLK_ESCAPE) this->engine->Stop();
+			if(SDL_event.key.keysym.sym == SDLK_ESCAPE) this->_engine->Stop();
 			break;
 
 		case SDL_KEYUP :
-			this->engine->GetEventManager()->TriggerEvent(Event(
+			this->_engine->GetEventManager()->TriggerEvent(Event(
 					"KEY_UP",
 					{
 							{"keycode", Util::to_string(SDL_event.key.keysym.sym)}
@@ -123,7 +123,7 @@ void SDLWrapper::HandleSDLEvents()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN :
-			this->engine->GetEventManager()->TriggerEvent(Event(
+			this->_engine->GetEventManager()->TriggerEvent(Event(
 					"MOUSE_DOWN",
 					{
 							{"x", Util::to_string(SDL_event.button.x)},
@@ -133,7 +133,7 @@ void SDLWrapper::HandleSDLEvents()
 			break;
 
 		case SDL_MOUSEBUTTONUP :
-			this->engine->GetEventManager()->TriggerEvent(Event(
+			this->_engine->GetEventManager()->TriggerEvent(Event(
 					"MOUSE_UP",
 					{
 							{"x", Util::to_string(SDL_event.button.x)},

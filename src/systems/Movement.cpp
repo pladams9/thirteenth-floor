@@ -26,7 +26,7 @@ namespace Sys
 /* METHOD DEFINITIONS */
 MovementSystem::MovementSystem(Engine* eng) : System(eng)
 {
-	this->engine->RegisterTimestepCallback
+	this->_engine->RegisterTimestepCallback
 	(
 			[this]() { this->Step(); },
 			Milliseconds(30)
@@ -35,7 +35,7 @@ MovementSystem::MovementSystem(Engine* eng) : System(eng)
 
 void MovementSystem::Step()
 {
-	std::vector<Entity> entities = this->engine->GetEntities({"Controller", "Transform"});
+	std::vector<Entity> entities = this->_engine->GetEntities({"Controller", "Transform"});
 
 	for(Entity entity : entities)
 	{

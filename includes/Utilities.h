@@ -89,6 +89,7 @@ struct vec4
   vec4(T val) : x(val), y(val), z(val), w(val) {};
 };
 
+
 // Material struct
 struct Material
 {
@@ -99,9 +100,10 @@ struct Material
 };
 
 
+// Drawable struct
 struct Drawable
 {
-	std::string modelNamde = "";
+	std::string modelName = "";
 	std::string shaderName = "";
 	Material material;
 };

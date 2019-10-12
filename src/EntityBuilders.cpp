@@ -13,12 +13,10 @@
 
 #include <components/CameraTargetPosition.h>
 #include <components/Controller.h>
-//#include <components/RotaterLogic.h>
 #include "components/Camera.h"
-#include <components/Shader.h>
 #include <components/Transform.h>
 #include <components/Velocity.h>
-#include <components/ModelName.h>
+#include "components/MeshDrawable.h"
 #include <engine/Component.h>
 
 
@@ -49,8 +47,10 @@ std::vector<Component*> Cube()
 {
 	// Add components
 	std::vector<Component*> comps;
-	comps.push_back(new Comp::ModelName("cube"));
-	comps.push_back(new Comp::Shader("test"));
+	Util::Drawable d;
+	d.modelName = "cube";
+	d.shaderName = "test";
+	comps.push_back(new Comp::MeshDrawable(d));
 	float bounds = 20.0f;
 	Comp::Transform* t = new Comp::Transform;
 	t->SetPosition(

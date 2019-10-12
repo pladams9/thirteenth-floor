@@ -22,21 +22,21 @@ namespace Sys
 /* METHOD DEFINITIONS */
 EventLogger::EventLogger(Engine* eng) : System(eng)
 {
-	this->engine->RegisterFrameStartCallback
+	this->_engine->RegisterFrameStartCallback
 	(
 			[this]() { this->Step(); }
 	);
 
-	this->eventQueue.Listen("KEY_DOWN");
-	this->eventQueue.Listen("KEY_UP");
-	this->eventQueue.Listen("MOUSE_DOWN");
-	this->eventQueue.Listen("MOUSE_UP");
+	this->_eventQueue.Listen("KEY_DOWN");
+	this->_eventQueue.Listen("KEY_UP");
+	this->_eventQueue.Listen("MOUSE_DOWN");
+	this->_eventQueue.Listen("MOUSE_UP");
 }
 
 void EventLogger::Step()
 {
 	Event e;
-	while(this->eventQueue.PollEvents(e))
+	while(this->_eventQueue.PollEvents(e))
 	{
 		std::stringstream log_msg;
 		if(e.GetEventType() == "KEY_DOWN") log_msg << "KEY_DOWN, Keycode: " << e.GetStringData("keycode");

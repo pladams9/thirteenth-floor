@@ -1,9 +1,8 @@
-
-/*
- * graphics.h
+/**
+ * OpenGLRenderer.h
  *
- *  Created on: Sep 13, 2019
- *      Author: pladams9
+ * System for rendering graphics using OpenGL. Requires that an OpenGL context has been created.
+ *
  */
 
 #ifndef INCLUDES_GRAPHICS_H_
@@ -11,16 +10,16 @@
 
 
 /* INCLUDES */
-#include <engine/System.h>
 #include <vector>
 #include <string>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
-#include <systems/OpenGL/ShaderManager.h>
-#include <systems/OpenGL/ModelManager.h>
+#include "engine/System.h"
+#include "systems/OpenGL/ShaderManager.h"
+#include "systems/OpenGL/ModelManager.h"
 
 
 namespace TF
@@ -30,9 +29,8 @@ namespace TF
 /* FORWARD DECLARATIONS */
 namespace Comp
 {
+class MeshDrawable;
 class Transform;
-class Shader;
-class ModelName;
 }
 
 
@@ -47,11 +45,11 @@ public:
 	OpenGLRenderer(Engine* engine, int win_width, int win_height);
 
 private:
-	glm::mat4 view;
-	glm::mat4 projection;
+	glm::mat4 _view;
+	glm::mat4 _projection;
 
-	OpenGL::ShaderManager shaders;
-	OpenGL::ModelManager models;
+	OpenGL::ShaderManager _shaders;
+	OpenGL::ModelManager _models;
 
 	void Step();
 
@@ -59,7 +57,7 @@ private:
 
 	void Render();
 
-	void DrawEntity(Comp::ModelName* modelComp, Comp::Shader* shaderComp, Comp::Transform* transform);
+	void DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform);
 };
 
 

@@ -21,11 +21,11 @@ namespace TF
 class System
 {
 protected:
-	Engine* engine;
-	EventQueue eventQueue;
+	Engine* _engine;
+	EventQueue _eventQueue;
 
 public:
-	System(Engine* eng) : engine(eng), eventQueue(eng->GetEventManager()) {}
+	System(Engine* eng) : _engine(eng), _eventQueue(eng->GetEventManager()) {}
 };
 
 
