@@ -1,8 +1,6 @@
-/*
- * Model.h
+/**
+ * ModelManager.h
  *
- *  Created on: Oct 1, 2019
- *      Author: pladams9
  */
 
 #ifndef SYSTEMS_OPENGL_MODELMANAGER_H_
@@ -11,11 +9,12 @@
 
 /* INCLUDES */
 #include <string>
+#include <vector>
 #include <unordered_map>
 
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
+#include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
 
 
 namespace TF
@@ -26,24 +25,38 @@ namespace OpenGL
 {
 
 
-struct Model
+struct SingleModel
 {
-	unsigned int VBO = 0;
 	unsigned int VAO = 0;
-	unsigned int count = 0;
+	unsigned int vertexCount = 0;
+};
+
+struct InstancedModel
+{
+	unsigned int VAO = 0;
+	unsigned int vertexCount = 0;
+	unsigned int instanceCount = 0;
 };
 
 
 class ModelManager
 {
 public:
-	Model GetModel(std::string model_name);
+	SingleModel GetSingleModel(std::string model_name);
+	InstancedModel GetInstancedModel(std::string model_name);
+	void UpdateInstances(std::vector<float> vertices);
 private:
-	const std::string modelPath = "../models/";
+	std::unordered_map<std::string, unsigned int> _vertexVBOs;
+	std::unordered_map<std::string, unsigned int> _vertexCounts;
+	std::unordered_map<std::string, unsigned int> _instanceVBOs;
+	std::unordered_map<std::string, SingleModel> _singleModels;
+	std::unordered_map<std::string, InstancedModel> _instancedModels;
 
-	std::unordered_map<std::string, Model> models;
+	void CreateSingleModel(std::string model_name);
+	void CreateInstancedModel(std::string model_name);
 
-	void LoadModel(std::string model_name);
+	const std::string _modelPath = "../models/";
+	void LoadVerticesFromFile(std::string model_name);
 };
 
 

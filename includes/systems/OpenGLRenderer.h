@@ -58,6 +58,8 @@ private:
 	void Render();
 
 	void DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform);
+	void DrawVoxels();
+	glm::mat4 MatrixFromTransform(const Comp::Transform* transform);
 };
 
 

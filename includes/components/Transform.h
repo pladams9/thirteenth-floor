@@ -42,9 +42,9 @@ public:
 			)
 	: _position(position), _rotation(rotation), _scale(Util::vec3d(scale)) {}
 
-	Util::vec3d GetPosition() { return _position; }
-	Util::vec3d GetRotation() { return _rotation; }
-	Util::vec3d GetScale() { return _scale; }
+	Util::vec3d GetPosition() const { return _position; }
+	Util::vec3d GetRotation() const { return _rotation; }
+	Util::vec3d GetScale() const { return _scale; }
 
 	void SetPosition(Util::vec3d position) { _position = position; }
 	void SetPosition(double x, double y, double z) { _position = Util::vec3d(x, y, z); }

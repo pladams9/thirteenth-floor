@@ -62,7 +62,11 @@ void OpenGLRenderer::Render()
 	glClearColor(0.02, 0.05, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// TODO: Draw voxel groups
+	// Draw voxel groups
+	for(Entity entity : _engine->GetEntities({}))
+	{
+		DrawVoxels();
+	}
 
 	// Draw single meshes
 	for(Entity entity : _engine->GetEntities({"MeshDrawable", "Transform"}))
@@ -129,32 +133,53 @@ void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform*
 {
 	Util::Drawable drawable = meshDrawable->GetDrawable();
 
-	OpenGL::Model model = _models.GetModel(drawable.modelName);
+	OpenGL::SingleModel model = _models.GetSingleModel(drawable.modelName);
 	glBindVertexArray(model.VAO);
 
 	_shaders.Use(drawable.shaderName);
 
 	// Set Matrices
-	glm::mat4 model_matrix = glm::mat4(1.0f);
-	Util::vec3d pos = transform->GetPosition();
-	Util::vec3d rotation = transform->GetRotation();
-	Util::vec3d scale = transform->GetScale();
-
-	model_matrix = glm::translate(model_matrix, glm::vec3(pos.x, pos.y, pos.z));
-	model_matrix = glm::rotate(model_matrix, (float)rotation.yaw, glm::vec3(0.0f, 1.0f, 0.0f));
-	model_matrix = glm::rotate(model_matrix, (float)rotation.pitch, glm::vec3(1.0f, 0.0f, 0.0f));
-	model_matrix = glm::rotate(model_matrix, (float)rotation.roll, glm::vec3(0.0f, 0.0f, 1.0f));
-	model_matrix = glm::scale(model_matrix, glm::vec3(scale.x, scale.y, scale.z));
+	glm::mat4 model_matrix = MatrixFromTransform(transform);
 
 	_shaders.SetUniformMat4f("model", model_matrix);
 	_shaders.SetUniformMat4f("view", _view);
 	_shaders.SetUniformMat4f("projection", _projection);
 
 	// Draw Call
-	glDrawArrays(GL_TRIANGLES, 0, model.count);
+	glDrawArrays(GL_TRIANGLES, 0, model.vertexCount);
 
 	// Unbind VAO
 	glBindVertexArray(0);
+}
+
+void OpenGLRenderer::DrawVoxels()
+{
+	// NEED: Lists of voxels (one list per drawable)
+	// NEED: Corresponding lists of positions
+	// Each voxel has a type (which corresponds to its drawable) and a position
+
+	// NEED: Overall transformation
+
+	// Get model_matrix from transform comp
+
+	// For each drawable
+		// Draw instances for that drawable
+}
+
+glm::mat4 OpenGLRenderer::MatrixFromTransform(const Comp::Transform* transform)
+{
+	glm::mat4 output_matrix = glm::mat4(1.0f);
+	Util::vec3d position = transform->GetPosition();
+	Util::vec3d rotation = transform->GetRotation();
+	Util::vec3d scale = transform->GetScale();
+
+	output_matrix = glm::translate(output_matrix, glm::vec3(position.x, position.y, position.z));
+	output_matrix = glm::rotate(output_matrix, (float)rotation.yaw, glm::vec3(0.0f, 1.0f, 0.0f));
+	output_matrix = glm::rotate(output_matrix, (float)rotation.pitch, glm::vec3(1.0f, 0.0f, 0.0f));
+	output_matrix = glm::rotate(output_matrix, (float)rotation.roll, glm::vec3(0.0f, 0.0f, 1.0f));
+	output_matrix = glm::scale(output_matrix, glm::vec3(scale.x, scale.y, scale.z));
+
+	return output_matrix;
 }
 
 
