@@ -39,6 +39,8 @@ void Engine::Stop()
 
 void Engine::MainLoop()
 {
+	static double frame_time = 0;
+	static int frames = 1;
 	this->lastStep = std::chrono::steady_clock::now();
 	while(this->running)
 	{
@@ -51,7 +53,17 @@ void Engine::MainLoop()
 		std::chrono::steady_clock::time_point new_time = std::chrono::steady_clock::now();
 		Milliseconds time_elapsed = std::chrono::duration_cast<Milliseconds>(new_time - this->lastStep);
 		this->lastStep = new_time;
-		LOGGER().Log(INFO, "Frame Length: " + Util::to_string(time_elapsed.count()) + "ms", true);
+
+		// Frame Length calculation
+		frame_time += time_elapsed.count();
+		if(frame_time > 2000.0)
+			{
+			LOGGER().Log(INFO, "Average Frame Length: " + Util::to_string(frame_time / frames) + "ms", true);
+			LOGGER().Log(INFO, "Average Frame Rate: " + Util::to_string(1000.0 / (frame_time / frames)) + " FPS", true);
+			frame_time = 0.0;
+			frames = 0;
+			}
+		++frames;
 
 		for(TimestepCallback& ts_callback : timestepCallbacks[FIRST])
 		{
@@ -85,6 +97,8 @@ void Engine::MainLoop()
 		for(Callback callback : frameEndCallbacks[FIRST]) { callback(); }
 		for(Callback callback : frameEndCallbacks[MIDDLE]) { callback(); }
 		for(auto it = frameEndCallbacks[LAST].rbegin(); it != frameEndCallbacks[LAST].rend(); ++it) { (*it)(); }
+
+		LOGGER().LogBreakLine();
 	}
 }
 

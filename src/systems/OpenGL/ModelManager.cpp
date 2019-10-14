@@ -155,7 +155,7 @@ InstancedModel ModelManager::GetInstancedModel(std::string model_name)
 	return model;
 }
 
-void ModelManager::UpdateInstances(std::string model_name, std::vector<float> vertices)
+void ModelManager::UpdateInstances(std::string model_name, std::vector<float> vertices, float scale)
 {
 	TF::LOGGER().Log(DEBUG, "Starting ModelManager::UpdateInstances(\"" + model_name + "\")");
 
@@ -170,9 +170,9 @@ void ModelManager::UpdateInstances(std::string model_name, std::vector<float> ve
 	{
 		for(unsigned int j = 0; j < (_vertices[model_name].size() / 6); ++j)
 		{
-			verts.push_back(vertices[3 * i] + _vertices[model_name][6 * j]);
-			verts.push_back(vertices[(3 * i) + 1] + _vertices[model_name][(6 * j) + 1]);
-			verts.push_back(vertices[(3 * i) + 2] + _vertices[model_name][(6 * j) + 2]);
+			verts.push_back((vertices[3 * i] + _vertices[model_name][6 * j]) * scale);
+			verts.push_back((vertices[(3 * i) + 1] + _vertices[model_name][(6 * j) + 1]) * scale);
+			verts.push_back((vertices[(3 * i) + 2] + _vertices[model_name][(6 * j) + 2]) * scale);
 			verts.push_back(_vertices[model_name][(6 * j) + 3]);
 			verts.push_back(_vertices[model_name][(6 * j) + 4]);
 			verts.push_back(_vertices[model_name][(6 * j) + 5]);

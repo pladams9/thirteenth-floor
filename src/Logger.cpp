@@ -102,13 +102,31 @@ void Logger::Log(LogLevel level, std::string message, bool screen_only)
 	{
 		this->logFile << output.str();
 		this->logFile.flush();
+		_readyForFileBreak = true;
 	}
 	if(level <= this->screenThreshold)
 	{
 		std::cout << output.str();
 		std::cout.flush();
+		_readyForScreenBreak = true;
 	}
 
+}
+
+void Logger::LogBreakLine()
+{
+	if(_readyForFileBreak)
+	{
+		this->logFile << "\n";
+		this->logFile.flush();
+		_readyForFileBreak = false;
+	}
+	if(_readyForScreenBreak)
+	{
+		std::cout << "\n";
+		std::cout.flush();
+		_readyForScreenBreak = false;
+	}
 }
 
 void Logger::SetLogThreshold(LogLevel file, LogLevel screen)

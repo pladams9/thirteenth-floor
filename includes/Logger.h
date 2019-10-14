@@ -34,12 +34,15 @@ public:
 	~Logger();
 
 	void Log(LogLevel level, std::string message, bool screen_only = false);
+	void LogBreakLine();
 	void SetLogThreshold(LogLevel file, LogLevel screen);
 
 private:
 	std::ofstream logFile;
 	LogLevel fileThreshold=ERROR;
 	LogLevel screenThreshold=INFO;
+	bool _readyForFileBreak = false;
+	bool _readyForScreenBreak = false;
 };
 
 

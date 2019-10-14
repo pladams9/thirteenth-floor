@@ -45,11 +45,13 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 
 	glEnable(GL_DEPTH_TEST);
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	//glEnable(GL_CULL_FACE);
+	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
+	glFrontFace(GL_CW);
 
 	// Setup View & Projection Matrices
 	_view = glm::mat4(1.0f);
-	_projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 1.0f, 500.0f);
+	_projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.5f, 500.0f);
 }
 
 void OpenGLRenderer::Step()
@@ -61,9 +63,6 @@ void OpenGLRenderer::Step()
 
 void OpenGLRenderer::Render()
 {
-	using Clock = std::chrono::high_resolution_clock;
-	auto start = Clock::now();
-
 	// Clear
 	glClearColor(0.02, 0.05, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -77,8 +76,6 @@ void OpenGLRenderer::Render()
 				static_cast<Comp::Transform*>(entity["Transform"])
 		);
 	}
-	TF::LOGGER().Log(DEBUG, "Voxel Draws took: " + Util::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count()));
-	start = Clock::now();
 
 	// Draw single meshes
 	for(Entity entity : _engine->GetEntities({"MeshDrawable", "Transform"}))
@@ -88,7 +85,6 @@ void OpenGLRenderer::Render()
 				static_cast<Comp::Transform*>(entity["Transform"])
 		);
 	}
-	TF::LOGGER().Log(DEBUG, "Mesh Draws took: " + Util::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count()));
 }
 
 void OpenGLRenderer::UpdateView()
@@ -182,7 +178,7 @@ void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxel
 				verts.push_back(v.position.y);
 				verts.push_back(v.position.z);
 			}
-			_models.UpdateInstances(drawable.modelName, verts);
+			_models.UpdateInstances(drawable.modelName, verts, voxelDrawable->GetVoxelScale());
 		}
 
 		OpenGL::InstancedModel model = _models.GetInstancedModel(drawable.modelName);

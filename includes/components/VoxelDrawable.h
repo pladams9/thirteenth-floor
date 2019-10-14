@@ -28,15 +28,16 @@ namespace Comp
 
 class VoxelDrawable : public Component
 {
-private:
-	std::unordered_map<VoxelType, Util::Drawable> _drawables;
-
 public:
 	std::string GetType() const { return "VoxelDrawable"; }
-	VoxelDrawable(std::unordered_map<VoxelType, Util::Drawable> drawables)
-	: _drawables(drawables) {}
+	VoxelDrawable(std::unordered_map<VoxelType, Util::Drawable> drawables, double voxelScale = 1.0)
+	: _drawables(drawables), _voxelScale(voxelScale) {}
 
 	std::unordered_map<VoxelType, Util::Drawable> GetDrawables() { return _drawables; }
+	double GetVoxelScale() { return _voxelScale; }
+private:
+	std::unordered_map<VoxelType, Util::Drawable> _drawables;
+	double _voxelScale;
 };
 
 

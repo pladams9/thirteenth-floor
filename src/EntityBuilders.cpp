@@ -85,6 +85,54 @@ std::vector<Component*> RandomCube()
 	return comps;
 }
 
+void GenerateVoxelRing(Comp::Voxels* voxels)
+{
+	int x_size = 150;
+	int y_size = 50;
+	int z_size = 150;
+	double radius = 50.0;
+
+	int hx_size = x_size / 2;
+	int hy_size = y_size / 2;
+	int hz_size = z_size / 2;
+	for(int x = -hx_size; x < hx_size; ++x)
+	{
+		for(int y = -hy_size; y < hy_size; ++y)
+		{
+			for(int z = -hz_size; z < hz_size; ++z)
+			{
+				double c_dist = abs(radius - sqrt((double)((x*x) + (z*z))));
+				double dist = sqrt((c_dist*c_dist) + (y*y));
+
+				double density = 1.0 / (1.0 + dist);
+				if(density > 0.2) voxels->AddVoxel(0, Util::vec3d(x, y, z));
+			}
+		}
+	}
+}
+
+void GenerateVoxelBlock(Comp::Voxels* voxels)
+{
+	int x_size = 4;
+	int y_size = 4;
+	int z_size = 4;
+
+	int hx_size = x_size / 2;
+	int hy_size = y_size / 2;
+	int hz_size = z_size / 2;
+
+	for(int x = -hx_size; x < hx_size; ++x)
+	{
+		for(int y = -hy_size; y < hy_size; ++y)
+		{
+			for(int z = -hz_size; z < hz_size; ++z)
+			{
+				voxels->AddVoxel(0, Util::vec3d(x, y, z));
+			}
+		}
+	}
+}
+
 std::vector<Component*> VoxelChunk(int n)
 {
 	std::vector<Component*> comps;
@@ -94,23 +142,18 @@ std::vector<Component*> VoxelChunk(int n)
 	d.shaderName = "test";
 
 	// VoxelDrawable
-	Comp::VoxelDrawable* vd = new Comp::VoxelDrawable({ std::pair<VoxelType, Util::Drawable>(0, d) });
+	Comp::VoxelDrawable* vd = new Comp::VoxelDrawable({ std::pair<VoxelType, Util::Drawable>(0, d) }, 0.15);
 	comps.push_back(vd);
 
 	// Transform
 	Comp::Transform* t = new Comp::Transform;
-	t->SetPosition(0.0, 0.0, 0.0);
+	t->SetPosition(0.0, -5.0, 0.0);
 	comps.push_back(t);
 
 	// Voxels
 	Comp::Voxels* v = new Comp::Voxels;
-	float bounds = 100;
-	for(int i = 0; i < n; ++i)
-		v->AddVoxel(0, Util::vec3d(
-			r_float() * bounds,
-			r_float() * bounds,
-			r_float() * bounds
-		));
+	GenerateVoxelRing(v);
+	//GenerateVoxelBlock(v);
 	comps.push_back(v);
 
 	return comps;
