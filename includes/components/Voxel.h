@@ -9,6 +9,10 @@
 #define COMPONENTS_VOXEL_H_
 
 
+/* INCLUDES */
+#include "Utilities.h"
+
+
 namespace TF
 {
 
@@ -17,7 +21,16 @@ using VoxelID = unsigned int;
 using VoxelType = unsigned int;
 
 
+struct Voxel
+{
+	VoxelID ID = 0;
+	VoxelType type = 0;
+	Util::vec3d position = Util::vec3d(0.0, 0.0, 0.0);
+};
+
+
 }
+bool operator==(const TF::Voxel& lhs, const TF::Voxel& rhs);
 
 
 #endif /* COMPONENTS_VOXEL_H_ */

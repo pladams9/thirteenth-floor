@@ -29,7 +29,6 @@ namespace Comp
 class VoxelDrawable : public Component
 {
 private:
-	std::unordered_map<VoxelType, std::vector<VoxelID>> _voxelIDs;
 	std::unordered_map<VoxelType, Util::Drawable> _drawables;
 
 public:
@@ -37,10 +36,7 @@ public:
 	VoxelDrawable(std::unordered_map<VoxelType, Util::Drawable> drawables)
 	: _drawables(drawables) {}
 
-	std::unordered_map<VoxelType, std::vector<VoxelID>> GetVoxelIDs() { return _voxelIDs; }
 	std::unordered_map<VoxelType, Util::Drawable> GetDrawables() { return _drawables; }
-
-	void SetVoxelIDs(std::unordered_map<VoxelType, std::vector<VoxelID>> voxelIDs) { _voxelIDs = voxelIDs; }
 };
 
 

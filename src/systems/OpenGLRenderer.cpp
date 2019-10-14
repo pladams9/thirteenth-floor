@@ -8,6 +8,7 @@
 
 /* INCLUDES */
 #include <array>
+#include <chrono>
 
 #include "GL/glew.h"
 #include "glm/glm.hpp"
@@ -18,6 +19,8 @@
 #include "components/CameraTargetPosition.h"
 #include "components/MeshDrawable.h"
 #include "components/Transform.h"
+#include "components/VoxelDrawable.h"
+#include "components/Voxels.h"
 #include "engine/Engine.h"
 #include "Logger.h"
 
@@ -58,15 +61,24 @@ void OpenGLRenderer::Step()
 
 void OpenGLRenderer::Render()
 {
+	using Clock = std::chrono::high_resolution_clock;
+	auto start = Clock::now();
+
 	// Clear
 	glClearColor(0.02, 0.05, 0.1, 1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Draw voxel groups
-	for(Entity entity : _engine->GetEntities({}))
+	for(Entity entity : _engine->GetEntities({"Voxels", "VoxelDrawable", "Transform"}))
 	{
-		DrawVoxels();
+		DrawVoxels(
+				static_cast<Comp::Voxels*>(entity["Voxels"]),
+				static_cast<Comp::VoxelDrawable*>(entity["VoxelDrawable"]),
+				static_cast<Comp::Transform*>(entity["Transform"])
+		);
 	}
+	TF::LOGGER().Log(DEBUG, "Voxel Draws took: " + Util::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count()));
+	start = Clock::now();
 
 	// Draw single meshes
 	for(Entity entity : _engine->GetEntities({"MeshDrawable", "Transform"}))
@@ -76,6 +88,7 @@ void OpenGLRenderer::Render()
 				static_cast<Comp::Transform*>(entity["Transform"])
 		);
 	}
+	TF::LOGGER().Log(DEBUG, "Mesh Draws took: " + Util::to_string(std::chrono::duration_cast<std::chrono::milliseconds>(Clock::now() - start).count()));
 }
 
 void OpenGLRenderer::UpdateView()
@@ -128,7 +141,6 @@ void OpenGLRenderer::UpdateView()
 	}
 }
 
-
 void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform)
 {
 	Util::Drawable drawable = meshDrawable->GetDrawable();
@@ -152,18 +164,46 @@ void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform*
 	glBindVertexArray(0);
 }
 
-void OpenGLRenderer::DrawVoxels()
+void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxelDrawable, Comp::Transform* transform)
 {
-	// NEED: Lists of voxels (one list per drawable)
-	// NEED: Corresponding lists of positions
-	// Each voxel has a type (which corresponds to its drawable) and a position
+	for(auto vd_pair : voxelDrawable->GetDrawables())
+	{
+		VoxelType voxel_type = vd_pair.first;
+		Util::Drawable drawable = vd_pair.second;
 
-	// NEED: Overall transformation
+		// Update instances
+		if(voxels->HasBeenUpdated())
+		{
+			std::vector<Voxel> v_list = voxels->GetVoxels(voxel_type);
+			std::vector<float> verts;
+			for(Voxel v : v_list)
+			{
+				verts.push_back(v.position.x);
+				verts.push_back(v.position.y);
+				verts.push_back(v.position.z);
+			}
+			_models.UpdateInstances(drawable.modelName, verts);
+		}
 
-	// Get model_matrix from transform comp
+		OpenGL::InstancedModel model = _models.GetInstancedModel(drawable.modelName);
+		glBindVertexArray(model.VAO);
 
-	// For each drawable
-		// Draw instances for that drawable
+		_shaders.Use(drawable.shaderName);
+
+		// Set Matrices
+		glm::mat4 model_matrix = MatrixFromTransform(transform);
+
+		_shaders.SetUniformMat4f("model", model_matrix);
+		_shaders.SetUniformMat4f("view", _view);
+		_shaders.SetUniformMat4f("projection", _projection);
+
+		// Draw Call
+		glDrawArrays(GL_TRIANGLES, 0, model.vertexCount * model.instanceCount);
+
+		// Unbind VAO
+		glBindVertexArray(0);
+	}
+	voxels->ClearUpdateFlag();
 }
 
 glm::mat4 OpenGLRenderer::MatrixFromTransform(const Comp::Transform* transform)

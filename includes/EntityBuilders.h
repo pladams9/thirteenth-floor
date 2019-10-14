@@ -25,8 +25,10 @@ class Component;
 namespace Create
 {
 
-std::vector<Component*> Cube();
 std::vector<Component*> Camera();
+std::vector<Component*> Cube();
+std::vector<Component*> RandomCube();
+std::vector<Component*> VoxelChunk(int n);
 
 }
 

@@ -36,10 +36,7 @@ int main(int argc, char* args[])
 
 	// Add entities
 	TF::LOGGER().Log(TF::DEBUG, "Creating entities");
-	for(int i = 0; i < 500; ++i)
-	{
-		engine.AddEntity(TF::Create::Cube());
-	}
+	engine.AddEntity(TF::Create::VoxelChunk(10000));
 	engine.AddEntity(TF::Create::Camera());
 	TF::LOGGER().Log(TF::DEBUG, "Finished creating entities");
 

@@ -31,6 +31,8 @@ namespace Comp
 {
 class MeshDrawable;
 class Transform;
+class VoxelDrawable;
+class Voxels;
 }
 
 
@@ -58,7 +60,7 @@ private:
 	void Render();
 
 	void DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform);
-	void DrawVoxels();
+	void DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxelDrawable, Comp::Transform* transform);
 	glm::mat4 MatrixFromTransform(const Comp::Transform* transform);
 };
 

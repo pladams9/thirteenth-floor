@@ -17,6 +17,8 @@
 #include <components/Transform.h>
 #include <components/Velocity.h>
 #include "components/MeshDrawable.h"
+#include "components/Voxels.h"
+#include "components/VoxelDrawable.h"
 #include <engine/Component.h>
 
 
@@ -45,6 +47,22 @@ float r_float()
 /* FUNCTION DEFINITIONS */
 std::vector<Component*> Cube()
 {
+	std::vector<Component*> comps;
+
+	Util::Drawable d;
+	d.modelName = "cube";
+	d.shaderName = "test";
+	comps.push_back(new Comp::MeshDrawable(d));
+
+	Comp::Transform* t = new Comp::Transform;
+	t->SetPosition(0.0, 0.0, 0.0);
+	comps.push_back(t);
+
+	return comps;
+}
+
+std::vector<Component*> RandomCube()
+{
 	// Add components
 	std::vector<Component*> comps;
 	Util::Drawable d;
@@ -67,11 +85,42 @@ std::vector<Component*> Cube()
 	return comps;
 }
 
+std::vector<Component*> VoxelChunk(int n)
+{
+	std::vector<Component*> comps;
+
+	Util::Drawable d;
+	d.modelName = "cube";
+	d.shaderName = "test";
+
+	// VoxelDrawable
+	Comp::VoxelDrawable* vd = new Comp::VoxelDrawable({ std::pair<VoxelType, Util::Drawable>(0, d) });
+	comps.push_back(vd);
+
+	// Transform
+	Comp::Transform* t = new Comp::Transform;
+	t->SetPosition(0.0, 0.0, 0.0);
+	comps.push_back(t);
+
+	// Voxels
+	Comp::Voxels* v = new Comp::Voxels;
+	float bounds = 100;
+	for(int i = 0; i < n; ++i)
+		v->AddVoxel(0, Util::vec3d(
+			r_float() * bounds,
+			r_float() * bounds,
+			r_float() * bounds
+		));
+	comps.push_back(v);
+
+	return comps;
+}
+
 std::vector<Component*> Camera()
 {
 	std::vector<Component*> comps;
 
-	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 25), Util::vec3d(3.14, 0, 0)));
+	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 5), Util::vec3d(1), Util::vec3d(-0.4, -0.4, 0)));
 	comps.push_back(new Comp::Camera());
 	//comps.push_back(new Comp::CameraTargetPosition());
 	comps.push_back(new Comp::Controller());

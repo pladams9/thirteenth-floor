@@ -44,8 +44,9 @@ class ModelManager
 public:
 	SingleModel GetSingleModel(std::string model_name);
 	InstancedModel GetInstancedModel(std::string model_name);
-	void UpdateInstances(std::vector<float> vertices);
+	void UpdateInstances(std::string model_name, std::vector<float> vertices);
 private:
+	std::unordered_map<std::string, std::vector<float>> _vertices;
 	std::unordered_map<std::string, unsigned int> _vertexVBOs;
 	std::unordered_map<std::string, unsigned int> _vertexCounts;
 	std::unordered_map<std::string, unsigned int> _instanceVBOs;

@@ -49,6 +49,7 @@ void ModelManager::LoadVerticesFromFile(std::string model_name)
 		vertices.push_back(stof(line));
 	}
 	fs.close();
+	_vertices[model_name] = vertices;
 
 	// Put vertices in VBO
 	glGenBuffers(1, &_vertexVBOs[model_name]);
@@ -86,7 +87,6 @@ void ModelManager::CreateSingleModel(std::string model_name)
 	// Unbind VAO, VBO, and EBO
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	_singleModels[model_name] = model;
 
@@ -101,6 +101,7 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 
 	if(_vertexVBOs.find(model_name) == _vertexVBOs.end())
 	{
+		TF::LOGGER().Log(DEBUG, "Model not found");
 		// Load Vertices VBO
 		LoadVerticesFromFile(model_name);
 	}
@@ -115,7 +116,7 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 	glBindVertexArray(model.VAO);
 
 	// Vertex Attributes
-	glBindBuffer(GL_ARRAY_BUFFER, _vertexVBOs[model_name]);
+	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name]);
 	// Positions
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -123,15 +124,9 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
 
-	// Instance Positions
-	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name]);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glVertexAttribDivisor(2, 1);
-
 	// Unbind VAO and VBO
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
 	_instancedModels[model_name] = model;
 
@@ -158,6 +153,40 @@ InstancedModel ModelManager::GetInstancedModel(std::string model_name)
 	}
 	model = _instancedModels.at(model_name);
 	return model;
+}
+
+void ModelManager::UpdateInstances(std::string model_name, std::vector<float> vertices)
+{
+	TF::LOGGER().Log(DEBUG, "Starting ModelManager::UpdateInstances(\"" + model_name + "\")");
+
+	// Update positions in instance VBO
+	if(_instanceVBOs.find(model_name) == _instanceVBOs.end())
+	{
+		CreateInstancedModel(model_name);
+	}
+
+	std::vector<float> verts;
+	for(unsigned int i = 0; i < (vertices.size() / 3); ++i)
+	{
+		for(unsigned int j = 0; j < (_vertices[model_name].size() / 6); ++j)
+		{
+			verts.push_back(vertices[3 * i] + _vertices[model_name][6 * j]);
+			verts.push_back(vertices[(3 * i) + 1] + _vertices[model_name][(6 * j) + 1]);
+			verts.push_back(vertices[(3 * i) + 2] + _vertices[model_name][(6 * j) + 2]);
+			verts.push_back(_vertices[model_name][(6 * j) + 3]);
+			verts.push_back(_vertices[model_name][(6 * j) + 4]);
+			verts.push_back(_vertices[model_name][(6 * j) + 5]);
+		}
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name]);
+	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), &verts[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	// Get instance count
+	_instancedModels[model_name].instanceCount = vertices.size();
+
+	TF::LOGGER().Log(DEBUG, "Finished ModelManager::UpdateInstances(\"" + model_name + "\")");
 }
 
 
