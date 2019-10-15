@@ -48,6 +48,7 @@ public:
 
 private:
 	glm::mat4 _view;
+	glm::vec3 _viewPos;
 	glm::mat4 _projection;
 
 	OpenGL::ShaderManager _shaders;

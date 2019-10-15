@@ -43,8 +43,8 @@ class ModelManager
 {
 public:
 	SingleModel GetSingleModel(std::string model_name);
-	InstancedModel GetInstancedModel(std::string model_name);
-	void UpdateInstances(std::string model_name, std::vector<float> vertices, float scale);
+	InstancedModel GetInstancedModel(std::string model_name, unsigned int sub_id);
+	void UpdateInstances(std::string model_name, unsigned int sub_id, std::vector<float> vertices, float scale);
 private:
 	std::unordered_map<std::string, std::vector<float>> _vertices;
 	std::unordered_map<std::string, unsigned int> _vertexVBOs;
@@ -54,7 +54,7 @@ private:
 	std::unordered_map<std::string, InstancedModel> _instancedModels;
 
 	void CreateSingleModel(std::string model_name);
-	void CreateInstancedModel(std::string model_name);
+	void CreateInstancedModel(std::string model_name, unsigned int sub_id);
 
 	const std::string _modelPath = "../models/";
 	void LoadVerticesFromFile(std::string model_name);

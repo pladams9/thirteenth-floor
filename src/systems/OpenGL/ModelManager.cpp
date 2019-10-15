@@ -17,6 +17,7 @@
 #include <GL/glew.h>
 
 #include "Logger.h"
+#include "Utilities.h"
 
 
 namespace TF
@@ -93,9 +94,9 @@ void ModelManager::CreateSingleModel(std::string model_name)
 	TF::LOGGER().Log(DEBUG, "Finished ModelManager::CreateSingleModel(\"" + model_name + "\")");
 }
 
-void ModelManager::CreateInstancedModel(std::string model_name)
+void ModelManager::CreateInstancedModel(std::string model_name, unsigned int sub_id)
 {
-	TF::LOGGER().Log(DEBUG, "Starting ModelManager::CreateInstancedModel(\"" + model_name + "\")");
+	TF::LOGGER().Log(DEBUG, "Starting ModelManager::CreateInstancedModel(\"" + model_name + "\", " + Util::to_string(sub_id) + ")");
 
 	InstancedModel model;
 
@@ -108,7 +109,7 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 	model.vertexCount = _vertexCounts[model_name];
 
 	// Create Instances VBO
-	glGenBuffers(1, &_instanceVBOs[model_name]);
+	glGenBuffers(1, &_instanceVBOs[model_name + Util::to_string(sub_id)]);
 	model.instanceCount = 0;
 
 	// Create VAO
@@ -116,7 +117,7 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 	glBindVertexArray(model.VAO);
 
 	// Vertex Attributes
-	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name]);
+	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name + Util::to_string(sub_id)]);
 	// Positions
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
@@ -128,7 +129,7 @@ void ModelManager::CreateInstancedModel(std::string model_name)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	_instancedModels[model_name] = model;
+	_instancedModels[model_name + Util::to_string(sub_id)] = model;
 
 	TF::LOGGER().Log(DEBUG, "Finished ModelManager::CreateInstancedModel(\"" + model_name + "\")");
 }
@@ -144,25 +145,25 @@ SingleModel ModelManager::GetSingleModel(std::string model_name)
 	return model;
 }
 
-InstancedModel ModelManager::GetInstancedModel(std::string model_name)
+InstancedModel ModelManager::GetInstancedModel(std::string model_name, unsigned int sub_id)
 {
 	InstancedModel model;
-	if(_instancedModels.find(model_name) == _instancedModels.end())
+	if(_instancedModels.find(model_name + Util::to_string(sub_id)) == _instancedModels.end())
 	{
-		CreateSingleModel(model_name);
+		CreateInstancedModel(model_name, sub_id);
 	}
-	model = _instancedModels.at(model_name);
+	model = _instancedModels.at(model_name + Util::to_string(sub_id));
 	return model;
 }
 
-void ModelManager::UpdateInstances(std::string model_name, std::vector<float> vertices, float scale)
+void ModelManager::UpdateInstances(std::string model_name, unsigned int sub_id, std::vector<float> vertices, float scale)
 {
 	TF::LOGGER().Log(DEBUG, "Starting ModelManager::UpdateInstances(\"" + model_name + "\")");
 
 	// Update positions in instance VBO
-	if(_instanceVBOs.find(model_name) == _instanceVBOs.end())
+	if(_instanceVBOs.find(model_name + Util::to_string(sub_id)) == _instanceVBOs.end())
 	{
-		CreateInstancedModel(model_name);
+		CreateInstancedModel(model_name, sub_id);
 	}
 
 	std::vector<float> verts;
@@ -179,12 +180,12 @@ void ModelManager::UpdateInstances(std::string model_name, std::vector<float> ve
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name]);
+	glBindBuffer(GL_ARRAY_BUFFER, _instanceVBOs[model_name + Util::to_string(sub_id)]);
 	glBufferData(GL_ARRAY_BUFFER, verts.size() * sizeof(float), &verts[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	// Get instance count
-	_instancedModels[model_name].instanceCount = vertices.size();
+	_instancedModels[model_name + Util::to_string(sub_id)].instanceCount = vertices.size();
 
 	TF::LOGGER().Log(DEBUG, "Finished ModelManager::UpdateInstances(\"" + model_name + "\")");
 }

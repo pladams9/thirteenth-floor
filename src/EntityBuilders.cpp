@@ -20,6 +20,7 @@
 #include "components/Voxels.h"
 #include "components/VoxelDrawable.h"
 #include <engine/Component.h>
+#include "Drawable.h"
 
 
 namespace TF
@@ -85,7 +86,71 @@ std::vector<Component*> RandomCube()
 	return comps;
 }
 
-void GenerateVoxelRing(Comp::Voxels* voxels)
+
+
+std::vector<Component*> VoxelChunk(std::function<void(Comp::Voxels*)> generator)
+{
+	std::vector<Component*> comps;
+
+	Util::Drawable d;
+	d.modelName = "cube";
+	d.shaderName = "test";
+	Util::Material m;
+	m.diffuse = Util::vec3f(0.1, 0.6, 0.1);
+	m.ambient = Util::vec3f(0.1, 0.6, 0.1);
+	d.material = m;
+
+	Util::Drawable d2;
+	d2.modelName = "cube";
+	d2.shaderName = "test";
+	m.diffuse = Util::vec3f(0.5, 0.3, 0.0);
+	m.ambient = Util::vec3f(0.5, 0.3, 0.0);
+	d2.material = m;
+
+	// VoxelDrawable
+	Comp::VoxelDrawable* vd = new Comp::VoxelDrawable(
+			{
+				std::pair<VoxelType, Util::Drawable>(0, d),
+				std::pair<VoxelType, Util::Drawable>(1, d2)
+			},
+			0.15
+	);
+	comps.push_back(vd);
+
+	// Transform
+	Comp::Transform* t = new Comp::Transform;
+	t->SetPosition(0.0, -5.0, 0.0);
+	comps.push_back(t);
+
+	// Voxels
+	Comp::Voxels* v = new Comp::Voxels;
+	if(generator) generator(v);
+	comps.push_back(v);
+
+	return comps;
+}
+
+std::vector<Component*> Camera()
+{
+	std::vector<Component*> comps;
+
+	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 5), Util::vec3d(1), Util::vec3d(-0.4, -0.4, 0)));
+	comps.push_back(new Comp::Camera());
+	//comps.push_back(new Comp::CameraTargetPosition());
+	comps.push_back(new Comp::Controller());
+
+	return comps;
+}
+
+
+}
+
+
+namespace VoxGen
+{
+
+
+void Ring(Comp::Voxels* voxels)
 {
 	int x_size = 150;
 	int y_size = 50;
@@ -105,13 +170,17 @@ void GenerateVoxelRing(Comp::Voxels* voxels)
 				double dist = sqrt((c_dist*c_dist) + (y*y));
 
 				double density = 1.0 / (1.0 + dist);
-				if(density > 0.2) voxels->AddVoxel(0, Util::vec3d(x, y, z));
+				if(density > 0.2)
+					{
+					if(y > 1) voxels->AddVoxel(0, Util::vec3d(x, y, z));
+					else voxels->AddVoxel(1, Util::vec3d(x, y, z));
+					}
 			}
 		}
 	}
 }
 
-void GenerateVoxelBlock(Comp::Voxels* voxels)
+void Block(Comp::Voxels* voxels)
 {
 	int x_size = 4;
 	int y_size = 4;
@@ -133,43 +202,6 @@ void GenerateVoxelBlock(Comp::Voxels* voxels)
 	}
 }
 
-std::vector<Component*> VoxelChunk(int n)
-{
-	std::vector<Component*> comps;
-
-	Util::Drawable d;
-	d.modelName = "cube";
-	d.shaderName = "test";
-
-	// VoxelDrawable
-	Comp::VoxelDrawable* vd = new Comp::VoxelDrawable({ std::pair<VoxelType, Util::Drawable>(0, d) }, 0.15);
-	comps.push_back(vd);
-
-	// Transform
-	Comp::Transform* t = new Comp::Transform;
-	t->SetPosition(0.0, -5.0, 0.0);
-	comps.push_back(t);
-
-	// Voxels
-	Comp::Voxels* v = new Comp::Voxels;
-	GenerateVoxelRing(v);
-	//GenerateVoxelBlock(v);
-	comps.push_back(v);
-
-	return comps;
-}
-
-std::vector<Component*> Camera()
-{
-	std::vector<Component*> comps;
-
-	comps.push_back(new Comp::Transform(Util::vec3d(-10, 5, 5), Util::vec3d(1), Util::vec3d(-0.4, -0.4, 0)));
-	comps.push_back(new Comp::Camera());
-	//comps.push_back(new Comp::CameraTargetPosition());
-	comps.push_back(new Comp::Controller());
-
-	return comps;
-}
 
 }
 }

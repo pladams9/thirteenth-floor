@@ -109,6 +109,24 @@ void ShaderManager::SetUniformMat4f(std::string name, glm::mat4 data)
 	glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(data));
 }
 
+void ShaderManager::SetUniformVec3f(std::string name, glm::vec3 data)
+{
+	int location = glGetUniformLocation(this->currentShader, name.c_str());
+	glUniform3fv(location, 1, &data[0]);
+}
+
+void ShaderManager::SetUniformVec3f(std::string name, Util::vec3f data)
+{
+	int location = glGetUniformLocation(this->currentShader, name.c_str());
+	glUniform3fv(location, 1, &data.vals[0]);
+}
+
+void ShaderManager::SetUniformFloat(std::string name, float data)
+{
+	int location = glGetUniformLocation(this->currentShader, name.c_str());
+	glUniform1f(location, data);
+}
+
 
 }
 }

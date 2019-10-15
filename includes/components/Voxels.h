@@ -36,7 +36,7 @@ public:
 		_voxels[v.ID] = v;
 		_voxelsByType[v.type].push_back(v);
 
-		_hasBeenUpdated = true;
+		_hasBeenUpdated[v.type] = true;
 
 		return v.ID;
 	}
@@ -58,7 +58,7 @@ public:
 			if(*it == v) v_list.erase(it);
 		}
 
-		_hasBeenUpdated = true;
+		_hasBeenUpdated[v.type] = true;
 	}
 
 	std::vector<Voxel> GetVoxels(VoxelType type)
@@ -66,21 +66,22 @@ public:
 		return _voxelsByType[type];
 	}
 
-	bool HasBeenUpdated()
+	bool HasBeenUpdated(VoxelType type)
 	{
-		return _hasBeenUpdated;
+		if(_hasBeenUpdated.find(type) == _hasBeenUpdated.end()) return false;
+		else return _hasBeenUpdated.at(type);
 	}
 
-	void ClearUpdateFlag()
+	void ClearUpdateFlag(VoxelType type)
 	{
-		_hasBeenUpdated = false;
+		_hasBeenUpdated[type] = false;
 	}
 
 private:
 	VoxelID _nextVoxelID = 1;
 	std::unordered_map<VoxelID, Voxel> _voxels;
 	std::unordered_map<VoxelType, std::vector<Voxel>> _voxelsByType;
-	bool _hasBeenUpdated = true;
+	std::unordered_map<VoxelType, bool> _hasBeenUpdated;
 };
 
 

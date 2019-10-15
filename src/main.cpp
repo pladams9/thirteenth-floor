@@ -1,3 +1,4 @@
+/* INCLUDES */
 #include <engine/Engine.h>
 #include "Logger.h"
 #include <EntityBuilders.h>
@@ -9,6 +10,12 @@
 #include <systems/OpenGLRenderer.h>
 #include <systems/SDLWrapper.h>
 
+
+/* FUNCTION DECLARATIONS */
+void BuildRingScene(TF::Engine& engine);
+
+
+/* MAIN */
 int main(int argc, char* args[])
 {
 	// Set logger threshold
@@ -23,12 +30,24 @@ int main(int argc, char* args[])
 	// Create Engine
 	TF::Engine engine;
 
+	// Build Scene
+	BuildRingScene(engine);
+
+	// Run engine loop
+	engine.Start();
+
+	TF::LOGGER().Log(TF::DEBUG, "Finishing main()");
+	return 0;
+}
+
+
+/* FUNCTION DEFINITIONS */
+void BuildRingScene(TF::Engine& engine)
+{
 	// Add systems
 	TF::LOGGER().Log(TF::DEBUG, "Creating systems");
 	engine.AddSystem(new TF::Sys::SDLWrapper(&engine));
 	engine.AddSystem(new TF::Sys::OpenGLRenderer(&engine, 1366, 768));
-	engine.AddSystem(new TF::Sys::LogicSystem(&engine));
-	//engine.AddSystem(new TF::Sys::EventLogger(&engine));
 	engine.AddSystem(new TF::Sys::KeyboardInput(&engine));
 	engine.AddSystem(new TF::Sys::MovementSystem(&engine));
 	engine.AddSystem(new TF::Sys::Physics(&engine));
@@ -36,12 +55,7 @@ int main(int argc, char* args[])
 
 	// Add entities
 	TF::LOGGER().Log(TF::DEBUG, "Creating entities");
-	engine.AddEntity(TF::Create::VoxelChunk(25000));
+	engine.AddEntity(TF::Create::VoxelChunk(TF::VoxGen::Ring));
 	engine.AddEntity(TF::Create::Camera());
 	TF::LOGGER().Log(TF::DEBUG, "Finished creating entities");
-
-	// Run main loop
-	engine.Start();
-
-	return 0;
 }

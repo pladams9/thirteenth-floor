@@ -10,6 +10,7 @@
 
 
 /* INCLUDES */
+#include <functional>
 #include <vector>
 
 
@@ -20,15 +21,32 @@ namespace TF
 /* FORWARD DECLARATIONS */
 class Component;
 
+namespace Comp
+{
+class Voxels;
+}
+
 
 /* FACTORY */
 namespace Create
 {
 
+
 std::vector<Component*> Camera();
 std::vector<Component*> Cube();
 std::vector<Component*> RandomCube();
-std::vector<Component*> VoxelChunk(int n);
+std::vector<Component*> VoxelChunk(std::function<void(Comp::Voxels*)> generator = nullptr);
+
+
+}
+
+namespace VoxGen
+{
+
+
+void Ring(Comp::Voxels* voxels);
+void Block(Comp::Voxels* voxels);
+
 
 }
 

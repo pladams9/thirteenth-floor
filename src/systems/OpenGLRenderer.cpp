@@ -23,6 +23,7 @@
 #include "components/Voxels.h"
 #include "engine/Engine.h"
 #include "Logger.h"
+#include "Drawable.h"
 
 
 namespace TF
@@ -44,13 +45,14 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 	glewInit();
 
 	glEnable(GL_DEPTH_TEST);
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_FRONT);
 	glFrontFace(GL_CW);
 
 	// Setup View & Projection Matrices
 	_view = glm::mat4(1.0f);
+	_viewPos = glm::vec3(0.0f);
 	_projection = glm::perspective(glm::radians(45.0f), (float)win_width / float(win_height), 0.5f, 500.0f);
 }
 
@@ -106,6 +108,7 @@ void OpenGLRenderer::UpdateView()
 	Comp::Transform* camera_transform = static_cast<Comp::Transform*>(active_camera["Transform"]);
 	Util::vec3d cam_pos = camera_transform->GetPosition();
 	glm::vec3 cameraPos = glm::vec3(cam_pos.x, cam_pos.y, cam_pos.z);
+	_viewPos = cameraPos;
 
 	if(active_camera["CameraTargetPosition"])
 	{
@@ -146,6 +149,15 @@ void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform*
 
 	_shaders.Use(drawable.shaderName);
 
+	// Set Material
+	_shaders.SetUniformVec3f("material.ambient", drawable.material.ambient);
+	_shaders.SetUniformVec3f("material.diffuse", drawable.material.diffuse);
+	_shaders.SetUniformVec3f("material.specular", drawable.material.specular);
+	_shaders.SetUniformFloat("material.specular_power", drawable.material.specular_power);
+
+	// Set viewPos
+	_shaders.SetUniformVec3f("viewPos", _viewPos);
+
 	// Set Matrices
 	glm::mat4 model_matrix = MatrixFromTransform(transform);
 
@@ -168,7 +180,7 @@ void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxel
 		Util::Drawable drawable = vd_pair.second;
 
 		// Update instances
-		if(voxels->HasBeenUpdated())
+		if(voxels->HasBeenUpdated(voxel_type))
 		{
 			std::vector<Voxel> v_list = voxels->GetVoxels(voxel_type);
 			std::vector<float> verts;
@@ -178,13 +190,20 @@ void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxel
 				verts.push_back(v.position.y);
 				verts.push_back(v.position.z);
 			}
-			_models.UpdateInstances(drawable.modelName, verts, voxelDrawable->GetVoxelScale());
+			_models.UpdateInstances(drawable.modelName, voxel_type, verts, voxelDrawable->GetVoxelScale());
+			voxels->ClearUpdateFlag(voxel_type);
 		}
 
-		OpenGL::InstancedModel model = _models.GetInstancedModel(drawable.modelName);
+		OpenGL::InstancedModel model = _models.GetInstancedModel(drawable.modelName, voxel_type);
 		glBindVertexArray(model.VAO);
 
 		_shaders.Use(drawable.shaderName);
+
+		// Set Material
+		_shaders.SetUniformVec3f("material.ambient", drawable.material.ambient);
+		_shaders.SetUniformVec3f("material.diffuse", drawable.material.diffuse);
+		_shaders.SetUniformVec3f("material.specular", drawable.material.specular);
+		_shaders.SetUniformFloat("material.specular_power", drawable.material.specular_power);
 
 		// Set Matrices
 		glm::mat4 model_matrix = MatrixFromTransform(transform);
@@ -199,7 +218,6 @@ void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxel
 		// Unbind VAO
 		glBindVertexArray(0);
 	}
-	voxels->ClearUpdateFlag();
 }
 
 glm::mat4 OpenGLRenderer::MatrixFromTransform(const Comp::Transform* transform)

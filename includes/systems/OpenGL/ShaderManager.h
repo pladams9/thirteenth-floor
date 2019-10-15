@@ -17,6 +17,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Vec.h"
+
 
 namespace TF
 {
@@ -32,6 +34,9 @@ public:
 	void Use(std::string shader_name);
 
 	void SetUniformMat4f(std::string name, glm::mat4 data);
+	void SetUniformVec3f(std::string name, glm::vec3 data);
+	void SetUniformVec3f(std::string name, Util::vec3f data);
+	void SetUniformFloat(std::string name, float data);
 private:
 	const std::string shaderPath = "../shaders/";
 
