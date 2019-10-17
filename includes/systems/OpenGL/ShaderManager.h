@@ -36,6 +36,7 @@ public:
 	void SetUniformMat4f(std::string name, glm::mat4 data);
 	void SetUniformVec3f(std::string name, glm::vec3 data);
 	void SetUniformVec3f(std::string name, Util::vec3f data);
+	void SetUniformVec3f(std::string name, Util::vec3d data);
 	void SetUniformFloat(std::string name, float data);
 private:
 	const std::string shaderPath = "../shaders/";

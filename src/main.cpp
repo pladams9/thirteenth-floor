@@ -9,6 +9,8 @@
 #include <systems/Physics.h>
 #include <systems/OpenGLRenderer.h>
 #include <systems/SDLWrapper.h>
+#include "components/LightSource.h"
+#include "Vec.h"
 
 
 /* FUNCTION DECLARATIONS */
@@ -55,7 +57,25 @@ void BuildRingScene(TF::Engine& engine)
 
 	// Add entities
 	TF::LOGGER().Log(TF::DEBUG, "Creating entities");
+
 	engine.AddEntity(TF::Create::VoxelChunk(TF::VoxGen::Ring));
 	engine.AddEntity(TF::Create::Camera());
+
+	using TF::Util::vec3d;
+	TF::Comp::Light l;
+	l.lightType = TF::Comp::DIRECTIONAL;
+	// Sun
+	l.ambient = vec3d(0.3, 0.3, 0.2);
+	l.diffuse = vec3d(1.0, 1.0, 0.75);
+	l.specular = vec3d(1.0, 1.0, 1.0);
+	l.direction = vec3d(0.5, -1.0, 0.0);
+	engine.AddEntity(TF::Create::Light(l));
+	// Ground reflection
+	l.ambient = vec3d(0);
+	l.diffuse = vec3d(0.1, 0.1, 0.2);
+	l.specular = vec3d(0.1, 0.1, 0.2);
+	l.direction = vec3d(0.5, 1.0, 0.0);
+	engine.AddEntity(TF::Create::Light(l));
+
 	TF::LOGGER().Log(TF::DEBUG, "Finished creating entities");
 }

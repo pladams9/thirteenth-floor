@@ -55,6 +55,7 @@ struct vec3
 	vec3& operator/=(const T& rhs) { x /= rhs; y /= rhs; z /= rhs; return *this; }
 	friend vec3 operator/(vec3 lhs, const T& rhs) { return lhs.operator/=(rhs); }
 };
+
 using vec3i = vec3<int>;
 using vec3f = vec3<float>;
 using vec3d = vec3<double>;

@@ -21,6 +21,7 @@
 #include "components/Transform.h"
 #include "components/VoxelDrawable.h"
 #include "components/Voxels.h"
+#include "components/LightSource.h"
 #include "engine/Engine.h"
 #include "Logger.h"
 #include "Drawable.h"
@@ -59,6 +60,7 @@ OpenGLRenderer::OpenGLRenderer(Engine* engine, int win_width, int win_height)
 void OpenGLRenderer::Step()
 {
 	UpdateView();
+	UpdateLights();
 	Render();
 }
 
@@ -140,6 +142,16 @@ void OpenGLRenderer::UpdateView()
 	}
 }
 
+void OpenGLRenderer::UpdateLights()
+{
+	std::vector<Comp::Light> lights;
+	for(Entity entity : _engine->GetEntities({"LightSource"}))
+	{
+		lights.push_back(static_cast<Comp::LightSource*>(entity["LightSource"])->GetLight());
+	}
+	_lights = lights;
+}
+
 void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform* transform)
 {
 	Util::Drawable drawable = meshDrawable->GetDrawable();
@@ -153,7 +165,9 @@ void OpenGLRenderer::DrawMesh(Comp::MeshDrawable* meshDrawable, Comp::Transform*
 	_shaders.SetUniformVec3f("material.ambient", drawable.material.ambient);
 	_shaders.SetUniformVec3f("material.diffuse", drawable.material.diffuse);
 	_shaders.SetUniformVec3f("material.specular", drawable.material.specular);
-	_shaders.SetUniformFloat("material.specular_power", drawable.material.specular_power);
+	_shaders.SetUniformFloat("material.rough", drawable.material.rough);
+
+	// Set Lights
 
 	// Set viewPos
 	_shaders.SetUniformVec3f("viewPos", _viewPos);
@@ -203,7 +217,66 @@ void OpenGLRenderer::DrawVoxels(Comp::Voxels* voxels, Comp::VoxelDrawable* voxel
 		_shaders.SetUniformVec3f("material.ambient", drawable.material.ambient);
 		_shaders.SetUniformVec3f("material.diffuse", drawable.material.diffuse);
 		_shaders.SetUniformVec3f("material.specular", drawable.material.specular);
-		_shaders.SetUniformFloat("material.specular_power", drawable.material.specular_power);
+		_shaders.SetUniformFloat("material.rough", drawable.material.rough);
+
+		// Set Lights
+		const int NUM_DIR_LIGHTS = 2;
+		const int NUM_POINT_LIGHTS = 4;
+		int cur_dir_light = 0;
+		int cur_point_light = 0;
+		for(Comp::Light l : _lights)
+		{
+			if((l.lightType == Comp::DIRECTIONAL) && (cur_dir_light < NUM_DIR_LIGHTS))
+			{
+				std::stringstream name;
+				name << "dirLights[" << cur_dir_light << "].";
+
+				_shaders.SetUniformVec3f(name.str() + "ambient", l.ambient);
+				_shaders.SetUniformVec3f(name.str() + "diffuse", l.diffuse);
+				_shaders.SetUniformVec3f(name.str() + "specular", l.specular);
+				_shaders.SetUniformVec3f(name.str() + "direction", l.direction);
+
+				cur_dir_light++;
+			}
+			if((l.lightType == Comp::POINT) && (cur_point_light < NUM_POINT_LIGHTS))
+			{
+				std::stringstream name;
+				name << "pointLights[" << cur_point_light << "].";
+
+				_shaders.SetUniformVec3f(name.str() + "ambient", l.ambient);
+				_shaders.SetUniformVec3f(name.str() + "diffuse", l.diffuse);
+				_shaders.SetUniformVec3f(name.str() + "specular", l.specular);
+				_shaders.SetUniformVec3f(name.str() + "position", l.position);
+				_shaders.SetUniformFloat(name.str() + "constant", l.constant);
+				_shaders.SetUniformFloat(name.str() + "linear", l.linear);
+				_shaders.SetUniformFloat(name.str() + "quadratic", l.quadratic);
+
+				cur_point_light++;
+			}
+		}
+		for(; cur_dir_light < NUM_DIR_LIGHTS; ++cur_dir_light)
+		{
+			std::stringstream name;
+			name << "dirLights[" << cur_dir_light << "].";
+
+			_shaders.SetUniformVec3f(name.str() + "ambient", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "diffuse", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "specular", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "direction", Util::vec3f(0,0,0));
+		}
+		for(; cur_point_light < NUM_POINT_LIGHTS; ++cur_point_light)
+		{
+			std::stringstream name;
+			name << "pointLights[" << cur_point_light << "].";
+
+			_shaders.SetUniformVec3f(name.str() + "ambient", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "diffuse", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "specular", Util::vec3f(0,0,0));
+			_shaders.SetUniformVec3f(name.str() + "position", Util::vec3f(0,0,0));
+			_shaders.SetUniformFloat(name.str() + "constant", 1.0);
+			_shaders.SetUniformFloat(name.str() + "linear", 0.09);
+			_shaders.SetUniformFloat(name.str() + "quadratic", 0.032);
+		}
 
 		// Set Matrices
 		glm::mat4 model_matrix = MatrixFromTransform(transform);

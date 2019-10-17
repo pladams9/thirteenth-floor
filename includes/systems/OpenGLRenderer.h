@@ -33,6 +33,7 @@ class MeshDrawable;
 class Transform;
 class VoxelDrawable;
 class Voxels;
+struct Light;
 }
 
 
@@ -53,10 +54,12 @@ private:
 
 	OpenGL::ShaderManager _shaders;
 	OpenGL::ModelManager _models;
+	std::vector<Comp::Light> _lights;
 
 	void Step();
 
 	void UpdateView();
+	void UpdateLights();
 
 	void Render();
 

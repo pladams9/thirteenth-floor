@@ -13,6 +13,8 @@
 #include <functional>
 #include <vector>
 
+#include "Vec.h"
+
 
 namespace TF
 {
@@ -24,6 +26,7 @@ class Component;
 namespace Comp
 {
 class Voxels;
+struct Light;
 }
 
 
@@ -36,6 +39,7 @@ std::vector<Component*> Camera();
 std::vector<Component*> Cube();
 std::vector<Component*> RandomCube();
 std::vector<Component*> VoxelChunk(std::function<void(Comp::Voxels*)> generator = nullptr);
+std::vector<Component*> Light(Comp::Light l);
 
 
 }

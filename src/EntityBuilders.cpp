@@ -19,6 +19,7 @@
 #include "components/MeshDrawable.h"
 #include "components/Voxels.h"
 #include "components/VoxelDrawable.h"
+#include "components/LightSource.h"
 #include <engine/Component.h>
 #include "Drawable.h"
 
@@ -103,8 +104,8 @@ std::vector<Component*> VoxelChunk(std::function<void(Comp::Voxels*)> generator)
 	Util::Drawable d2;
 	d2.modelName = "cube";
 	d2.shaderName = "test";
-	m.diffuse = Util::vec3f(0.5, 0.3, 0.0);
-	m.ambient = Util::vec3f(0.5, 0.3, 0.0);
+	m.diffuse = Util::vec3f(0.5, 0.3, 0.1);
+	m.ambient = Util::vec3f(0.5, 0.3, 0.1);
 	d2.material = m;
 
 	// VoxelDrawable
@@ -138,6 +139,14 @@ std::vector<Component*> Camera()
 	comps.push_back(new Comp::Camera());
 	//comps.push_back(new Comp::CameraTargetPosition());
 	comps.push_back(new Comp::Controller());
+
+	return comps;
+}
+
+std::vector<Component*> Light(Comp::Light l)
+{
+	std::vector<Component*> comps;
+	comps.push_back(new Comp::LightSource(l));
 
 	return comps;
 }

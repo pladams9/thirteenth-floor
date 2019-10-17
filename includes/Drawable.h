@@ -23,7 +23,7 @@ struct Material
 	vec3<float> ambient = vec3<float>(1.0f, 1.0f, 1.0f);
 	vec3<float> diffuse = vec3<float>(1.0f, 1.0f, 1.0f);
 	vec3<float> specular = vec3<float>(1.0f, 1.0f, 1.0f);
-	float specular_power = 32.0f;
+	float rough = 32.0f;
 };
 
 

@@ -121,6 +121,16 @@ void ShaderManager::SetUniformVec3f(std::string name, Util::vec3f data)
 	glUniform3fv(location, 1, &data.vals[0]);
 }
 
+void ShaderManager::SetUniformVec3f(std::string name, Util::vec3d data)
+{
+	int location = glGetUniformLocation(this->currentShader, name.c_str());
+	Util::vec3f data_f;
+	data_f.x = (float)data.x;
+	data_f.y = (float)data.y;
+	data_f.z = (float)data.z;
+	glUniform3fv(location, 1, &data_f.vals[0]);
+}
+
 void ShaderManager::SetUniformFloat(std::string name, float data)
 {
 	int location = glGetUniformLocation(this->currentShader, name.c_str());

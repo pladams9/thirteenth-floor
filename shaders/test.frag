@@ -1,44 +1,122 @@
 #version 140 core
 
+
+// STRUCTS
 struct Material
 {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
-	float specular_power;
+	float rough;
 };
 
+struct DirLight
+{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	vec3 direction;
+};
+
+struct PointLight
+{
+	vec3 ambient;
+	vec3 diffuse;
+	vec3 specular;
+	
+	vec3 position;
+	
+	float constant;
+	float linear;
+	float quadratic;
+};
+
+
+// CONSTANTS
+#define NUM_DIR_LIGHTS 2
+#define NUM_POINT_LIGHTS 4
+
+
+// UNIFORMS
 uniform Material material;
 uniform vec3 viewPos;
+uniform DirLight dirLights[NUM_DIR_LIGHTS];
+uniform PointLight pointLights[NUM_POINT_LIGHTS];
 
+
+// IN VARS
 in vec3 FragPos;
 in vec3 Normal;
 
+
+// OUT VARS
 out vec4 FragColor;
 
+
+// FUNCTION PROTOTYPES
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+
+// MAIN
 void main()
 {
-	// Light settings
-	vec3 lightAmbient = vec3(0.5f, 0.5f, 0.5f);
-	vec3 lightDiffuse = vec3(0.7f, 0.7f, 0.7f);
-	vec3 lightSpec = vec3(1.0f, 1.0f, 1.0f);
-	vec3 lightDir = normalize(-vec3(-0.2f, -1.0f, -0.3f));
-	
-	// Ambient calculation
-	vec3 ambient = material.ambient * lightAmbient;
-	
-	// Diffuse calculation
 	vec3 norm = normalize(Normal);
-	float diff = max(dot(norm, lightDir), 0.0f);
-	vec3 diffuse = lightDiffuse * (diff * material.diffuse);
+	vec3 viewDir = normalize(viewPos - FragPos);
 	
-    // specular
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.specular_power);
-    vec3 specular = lightSpec * (spec * material.specular);  
+	vec3 result = vec3(0, 0, 0);
+    
+	for(int i = 0; i < NUM_DIR_LIGHTS; i++)
+		result += CalcDirLight(dirLights[i], norm, viewDir);
+
+	for(int i = 0; i < NUM_POINT_LIGHTS; i++)
+		result += CalcPointLight(pointLights[i], norm, FragPos, viewDir);    
+    
+    FragColor = vec4(result, 1.0);
+}
+
+
+// FUNCTION DEFINITIONS
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir)
+{
+	vec3 lightDir = normalize(-light.direction);
 	
-	// Output	
-	vec3 result = ambient + diffuse + specular;
-	FragColor = vec4(result, 1.0f);
+	// AMBIENT
+	vec3 ambient = light.ambient * material.ambient;
+
+	// DIFFUSE
+	float diff = max(dot(normal, lightDir), 0.0);
+	vec3 diffuse = light.diffuse * diff * material.diffuse;
+
+	// SPECULAR
+	vec3 reflectDir = reflect(-lightDir, normal);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.rough);
+	vec3 specular = light.specular * spec * material.specular;
+
+	return (ambient + diffuse + specular);
+}
+
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+{
+	vec3 lightDir = normalize(light.position - fragPos);
+
+	// AMBIENT
+	vec3 ambient = light.ambient * material.ambient;
+
+	// DIFFUSE
+	float diff = max(dot(normal, lightDir), 0.0);
+	vec3 diffuse = light.diffuse * diff * material.diffuse;
+
+	// SPECULAR
+	vec3 reflectDir = reflect(-lightDir, normal);
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.rough);
+	vec3 specular = light.specular * spec * material.specular;
+
+	// ATTENUATION
+	float distance = length(light.position - fragPos);
+	float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));    
+	ambient *= attenuation;
+	diffuse *= attenuation;
+	specular *= attenuation;
+    
+	return (ambient + diffuse + specular);
 }
